@@ -26,7 +26,7 @@ function This_MOD.start()
     --- Crear los nuevos prototipos
     This_MOD.create_item()
     This_MOD.create_entity()
-    -- This_MOD.create_recipe()
+    This_MOD.create_recipe()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -98,10 +98,11 @@ function This_MOD.create_item()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Nuevo prototipo
-    local Item = util.copy(This_MOD.duplicate.item)
+    local Item = util.copy(This_MOD.ref.item)
 
     --- Sobre escribir las propiedades
-    Item.name = This_MOD.prefix .. Item.name
+    Item.name = This_MOD.prefix .. This_MOD.duplicate.item.name
+    Item.icons = This_MOD.duplicate.item.icons
     Item.place_result = This_MOD.prefix .. Item.place_result
 
     Item.localised_name = { "", { "entity-name." .. This_MOD.duplicate.entity.name } }
@@ -138,7 +139,7 @@ function This_MOD.create_entity()
     Result.name = This_MOD.prefix .. This_MOD.duplicate.entity.name
 
     --- Crear el prototipo
-    GPrefix.extend( Entity )
+    GPrefix.extend(Entity)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -148,24 +149,26 @@ function This_MOD.create_recipe()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Nuevo prototipo
-    local Recipe = util.copy(RefRecipe)
+    local Recipe = util.copy(This_MOD.ref.recipe)
 
     --- Sobre escribir las propiedades
-    Recipe.name = This_MOD.NewNombre
-    Recipe.localised_name = { "", { "entity-name." .. Chest.name } }
-    Recipe.localised_description = nil
-    Recipe.icons = { { icon = Chest.icon } }
+    Recipe.name = This_MOD.prefix .. Recipe.name
+    Recipe.icons = This_MOD.duplicate.entity.icons
 
-    local Result = GPrefix.get_table(Recipe.results, "name", RefItem.name)
-    Result.name = This_MOD.NewNombre
+    Recipe.localised_name = { "", { "entity-name." .. This_MOD.duplicate.entity.name } }
+    Recipe.localised_description = { "", { "entity-description." .. This_MOD.duplicate.entity.name } }
+
+    local Result = GPrefix.get_table(Recipe.results, "name", This_MOD.ref.item.name)
+    Result.name = This_MOD.prefix .. Result.name
 
     local order = tonumber(Recipe.order) + 1
-    Recipe.order = GPrefix.pad_left(#Recipe.order, order)
+    Recipe.order = GPrefix.pad_left_zeros(#Recipe.order, order)
 
     --- Crear el prototipo
-    GPrefix.addDataRaw({ Recipe })
-    GPrefix.addRecipeToTechnology(RefRecipe.name, nil, Recipe)
-
+    GPrefix.add_recipe_to_tech_with_recipe(
+        This_MOD.ref.recipe.name,
+        Recipe
+    )
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
