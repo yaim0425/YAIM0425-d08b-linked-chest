@@ -18,8 +18,8 @@ function This_MOD.start()
     --- Valores de la referencia
     This_MOD.setting_mod()
 
-    -- --- Entidades a afectar
-    -- This_MOD.BuildInfo()
+    --- Entidades a afectar
+    This_MOD.get_chest()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -55,73 +55,39 @@ end
 ---------------------------------------------------------------------------------------------------
 
 --- Entidades a afectar
-function This_MOD.BuildInfo()
-    --- Espacios a usar
-    This_MOD.Info.Entities = {}
-    This_MOD.Info.Recipes = {}
-    This_MOD.Info.Items = {}
-
-    --- Renombrar
-    local Entities = This_MOD.Info.Entities
-    local Recipes = This_MOD.Info.Recipes
-    local Items = This_MOD.Info.Items
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Duplicar la entidad objetivo
-    Entities.Chest = data.raw["linked-container"][This_MOD.ref]
-    Entities.Chest = util.copy(Entities.Chest)
-
-    --- Ajustar la parte de mineria
-    if Entities.Chest.minable.result then
-        --- Renombrar
-        local minable = Entities.Chest.minable
-
-        --- Dar el formato deseado
-        minable.results = { {
-            type = "item",
-            name = minable.result,
-            amount = minable.count or 1
-        } }
-
-        --- Borrar
-        minable.result = nil
-        minable.count = nil
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Duplicar el objeto
-    local Result = Entities.Chest.minable.results
-    Result = GPrefix.get_table(Result, "name", This_MOD.ref)
-    Items.Chest = data.raw.item[Result.name]
-
+function This_MOD.get_chest()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Posibles objetos de referencia
     local Chest = {}
-    table.insert(Chest, "storage-chest")
-    table.insert(Chest, "passive-provider-chest")
-    table.insert(Chest, "requester-chest")
     table.insert(Chest, "buffer-chest")
+    table.insert(Chest, "storage-chest")
+    table.insert(Chest, "requester-chest")
     table.insert(Chest, "active-provider-chest")
+    table.insert(Chest, "passive-provider-chest")
 
     --- Objeto de referencia
-    local Orders = {}
-    local Order_chest = {}
-    for key, name in pairs(Chest) do
-        Chest[key] = GPrefix.items[name]
-        Order_chest[Chest[key].order] = Chest[key]
-        table.insert(Orders, Chest[key].order)
+    This_MOD.entity = data.raw["linked-container"][This_MOD.ref]
+    This_MOD.entity.inventory_size = This_MOD.entity.inventory_size or 0
+    for _, name in pairs(Chest) do
+        local Entiy = GPrefix.entities[name]
+GPrefix.var_dump(Entiy)
+        if This_MOD.entity.inventory_size < Entiy.inventory_size then
+            This_MOD.entity = Entiy
+        end
     end
 
-    --- Ordenar los objetos
-    table.sort(Orders)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Obtener las referencia
-    Items.Ref = Order_chest[Orders[#Chest]]
-    Entities.Ref = GPrefix.entities[Items.Ref.place_result]
-    Recipes.Ref = GPrefix.recipes[Items.Ref.name][1]
+    --- Guardar la información
+    This_MOD.item = GPrefix.get_item_create_entity(This_MOD.entity)
+    This_MOD.recipe = GPrefix.recipes[This_MOD.item][1]
+
+    This_MOD.entity = util.copy(This_MOD.entity)
+    This_MOD.recipe = util.copy(This_MOD.recipe)
+    This_MOD.item = util.copy(This_MOD.item)
+-- GPrefix.var_dump(This_MOD)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 --- Crear el nuevo objeto
