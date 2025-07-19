@@ -4,86 +4,63 @@
 
 --- Contenedor de funciones y datos usados
 --- unicamente en este archivo
-local ThisMOD = {}
-
----------------------------------------------------------------------------------------------------
+local This_MOD = {}
 
 ---------------------------------------------------------------------------------------------------
 
 --- Iniciar el modulo
-function ThisMOD.Start()
+function This_MOD.start()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Obtener información desde el nombre de MOD
+    GPrefix.split_name_folder(This_MOD)
+
     --- Valores de la referencia
-    ThisMOD.setSetting()
+    This_MOD.setting_mod()
 
     --- Entidades a afectar
-    ThisMOD.BuildInfo()
+    This_MOD.get_ref()
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Crear los nuevos prototipos
-    ThisMOD.CreateItem()
-    ThisMOD.CreateEntity()
-    ThisMOD.CreateRecipe()
+    This_MOD.create_item()
+    This_MOD.create_entity()
+    This_MOD.create_recipe()
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 --- Valores de la referencia
-function ThisMOD.setSetting()
-    --- Otros valores
-    ThisMOD.Prefix    = "zzzYAIM0425-0800-"
-    ThisMOD.name      = "linked-chest"
-
-    --- Elemento a duplicar
-    ThisMOD.Entity    = "linked-chest"
+function This_MOD.setting_mod()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Información de referencia
-    ThisMOD.Info      = {}
+    This_MOD.ref = {}
+    This_MOD.ref.name = {}
+    This_MOD.ref.entity = {}
+    This_MOD.ref.recipe = {}
+    This_MOD.ref.item = {}
 
-    --- Nombre a usar
-    ThisMOD.NewNombre = ThisMOD.Prefix .. ThisMOD.Entity
+    --- Información a duplicar
+    This_MOD.duplicate = {}
+    This_MOD.duplicate.name = "linked-chest"
+    This_MOD.duplicate.entity = data.raw["linked-container"][This_MOD.duplicate.name]
+    This_MOD.duplicate.item = data.raw["item"][This_MOD.duplicate.name]
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 ---------------------------------------------------------------------------------------------------
+
+
+
+
 
 ---------------------------------------------------------------------------------------------------
 
 --- Entidades a afectar
-function ThisMOD.BuildInfo()
-    --- Espacios a usar
-    ThisMOD.Info.Entities = {}
-    ThisMOD.Info.Recipes = {}
-    ThisMOD.Info.Items = {}
-
-    --- Renombrar
-    local Entities = ThisMOD.Info.Entities
-    local Recipes = ThisMOD.Info.Recipes
-    local Items = ThisMOD.Info.Items
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Duplicar la entidad objetivo
-    Entities.Chest = data.raw["linked-container"][ThisMOD.Entity]
-    Entities.Chest = util.copy(Entities.Chest)
-
-    --- Ajustar la parte de mineria
-    if Entities.Chest.minable.result then
-        --- Renombrar
-        local minable = Entities.Chest.minable
-
-        --- Dar el formato deseado
-        minable.results = { {
-            type = "item",
-            name = minable.result,
-            amount = minable.count or 1
-        } }
-
-        --- Borrar
-        minable.result = nil
-        minable.count = nil
-    end
-
-    --- Duplicar el objeto
-    local Result = Entities.Chest.minable.results
-    Result = GPrefix.get_table(Result, "name", ThisMOD.Entity)
-    Items.Chest = data.raw.item[Result.name]
-
+function This_MOD.get_ref()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Posibles objetos de referencia
@@ -97,102 +74,151 @@ function ThisMOD.BuildInfo()
     --- Objeto de referencia
     local Orders = {}
     local Order_chest = {}
-    for key, name in pairs(Chest) do
-        Chest[key] = GPrefix.items[name]
-        Order_chest[Chest[key].order] = Chest[key]
-        table.insert(Orders, Chest[key].order)
+    for _, name in pairs(Chest) do
+        local Item = GPrefix.items[name]
+        Order_chest[Item.order] = name
+        table.insert(Orders, Item.order)
     end
 
     --- Ordenar los objetos
     table.sort(Orders)
 
-    --- Obtener las referencia
-    Items.Ref = Order_chest[Orders[#Chest]]
-    Entities.Ref = GPrefix.entities[Items.Ref.place_result]
-    Recipes.Ref = GPrefix.recipes[Items.Ref.name][1]
-end
+    --- Información de referencia
+    This_MOD.ref.name = Order_chest[Orders[#Chest]]
+    This_MOD.ref.entity = GPrefix.entities[This_MOD.ref.name]
+    This_MOD.ref.recipe = GPrefix.recipes[This_MOD.ref.name][1]
+    This_MOD.ref.item = GPrefix.items[This_MOD.ref.name]
+    This_MOD.ref.tech = GPrefix.get_technology(This_MOD.ref.recipe)
 
---- Crear el nuevo objeto
-function ThisMOD.CreateItem()
-    --- Renombrar
-    local Chest = ThisMOD.Info.Items.Chest
-    local Ref = ThisMOD.Info.Items.Ref
-
-    --- Nuevo prototipo
-    local Item = util.copy(Ref)
-
-    --- Sobre escribir las propiedades
-    Item.name = ThisMOD.NewNombre
-    Item.localised_name = { "", { "entity-name." .. Chest.name } }
-    Item.localised_description = nil
-    Item.place_result = ThisMOD.NewNombre
-    Item.icons = { { icon = Chest.icon } }
-
-    local order = tonumber(Item.order) + 1
-    Item.order = GPrefix.pad_left(#Item.order, order)
-
-    --- Crear el prototipo
-    GPrefix.addDataRaw({ Item })
-end
-
---- Crear la nueva entidad
-function ThisMOD.CreateEntity()
-    --- Renombrar
-    local Chest = ThisMOD.Info.Entities.Chest
-    local RefEntity = ThisMOD.Info.Entities.Ref
-    local RefItem = ThisMOD.Info.Items.Ref
-
-    --- Nuevo prototipo
-    local Entity = util.copy(RefEntity)
-
-    --- Sobre escribir las propiedades
-    Entity.type = Chest.type
-    Entity.name = ThisMOD.NewNombre
-    Entity.localised_name = { "", { "entity-name." .. Chest.name } }
-    Entity.localised_description = nil
-    Entity.icons = { { icon = Chest.icon } }
-    Entity.picture = Chest.picture
-
-    local Result = Entity.minable.results
-    Result = GPrefix.get_table(Result, "name", RefItem.name)
-    Result.name = ThisMOD.NewNombre
-
-    --- Crear el prototipo
-    GPrefix.addDataRaw({ Entity })
-end
-
---- Crear la receta
-function ThisMOD.CreateRecipe()
-    --- Renombrar
-    local Chest = ThisMOD.Info.Items.Chest
-    local RefRecipe = ThisMOD.Info.Recipes.Ref
-    local RefItem = ThisMOD.Info.Items.Ref
-
-    --- Nuevo prototipo
-    local Recipe = util.copy(RefRecipe)
-
-    --- Sobre escribir las propiedades
-    Recipe.name = ThisMOD.NewNombre
-    Recipe.localised_name = { "", { "entity-name." .. Chest.name } }
-    Recipe.localised_description = nil
-    Recipe.icons = { { icon = Chest.icon } }
-
-    local Result = GPrefix.get_table(Recipe.results, "name", RefItem.name)
-    Result.name = ThisMOD.NewNombre
-
-    local order = tonumber(Recipe.order) + 1
-    Recipe.order = GPrefix.pad_left(#Recipe.order, order)
-
-    --- Crear el prototipo
-    GPrefix.addDataRaw({ Recipe })
-    GPrefix.addRecipeToTechnology(RefRecipe.name, nil, Recipe)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 ---------------------------------------------------------------------------------------------------
+
+--- Crear el nuevo objeto
+function This_MOD.create_item()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Nuevo prototipo
+    local Item = util.copy(This_MOD.ref.item)
+
+    --- Sobre escribir las propiedades
+    Item.name = This_MOD.prefix .. This_MOD.duplicate.item.name
+    Item.icons = This_MOD.duplicate.item.icons
+    Item.place_result = This_MOD.prefix .. This_MOD.duplicate.entity.name
+
+    Item.localised_name = { "", { "entity-name." .. This_MOD.duplicate.entity.name } }
+    Item.localised_description = { "", { "entity-description." .. This_MOD.duplicate.entity.name } }
+
+    local order = tonumber(Item.order) + 1
+    Item.order = GPrefix.pad_left_zeros(#Item.order, order)
+
+    --- Crear el objeto
+    GPrefix.extend(Item)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+--- Crear la nueva entidad
+function This_MOD.create_entity()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Nuevo prototipo
+    local Entity = util.copy(This_MOD.ref.entity)
+
+    --- Sobre escribir las propiedades
+    Entity.type = This_MOD.duplicate.entity.type
+    Entity.name = This_MOD.prefix .. This_MOD.duplicate.entity.name
+
+    Entity.localised_name = { "", { "entity-name." .. This_MOD.duplicate.entity.name } }
+    Entity.localised_description = { "", { "entity-description." .. This_MOD.duplicate.entity.name } }
+
+    Entity.icons = This_MOD.duplicate.entity.icons
+    Entity.picture = This_MOD.duplicate.entity.picture
+
+    local Result = Entity.minable.results
+    Result = GPrefix.get_table(Result, "name", This_MOD.ref.item.name)
+    Result.name = This_MOD.prefix .. This_MOD.duplicate.item.name
+
+    --- Crear el prototipo
+    GPrefix.extend(Entity)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+--- Crear la receta
+function This_MOD.create_recipe()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Nuevo prototipo
+    local Recipe = util.copy(This_MOD.ref.recipe)
+
+    --- Sobre escribir las propiedades
+    Recipe.name = This_MOD.prefix .. This_MOD.duplicate.item.name
+    Recipe.icons = This_MOD.duplicate.entity.icons
+
+    Recipe.localised_name = { "", { "entity-name." .. This_MOD.duplicate.entity.name } }
+    Recipe.localised_description = { "", { "entity-description." .. This_MOD.duplicate.entity.name } }
+
+    local Result = GPrefix.get_table(Recipe.results, "name", This_MOD.ref.item.name)
+    Result.name = This_MOD.prefix .. This_MOD.duplicate.item.name
+
+    local order = tonumber(Recipe.order) + 1
+    Recipe.order = GPrefix.pad_left_zeros(#Recipe.order, order)
+
+    --- Crear la receta
+    GPrefix.extend(Recipe)
+
+    --- Agregar a la tecnología
+    This_MOD.create_tech(This_MOD.ref, Recipe)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+---------------------------------------------------------------------------------------------------
+
+--- Crear las tecnologías
+function This_MOD.create_tech(space, new_recipe)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Validación
+    if not space.tech then return end
+
+    --- Nombre de la nueva tecnología
+    local Tech_name = space.tech and space.tech.name
+    Tech_name = GPrefix.delete_prefix(Tech_name)
+    Tech_name = This_MOD.prefix .. Tech_name
+
+    --- La tecnología ya existe
+    if GPrefix.tech.raw[Tech_name] then
+        GPrefix.add_recipe_to_tech(Tech_name, new_recipe)
+        return
+    end
+
+    --- Preprar la nueva tecnología
+    local Tech = util.copy(space.tech)
+    Tech.prerequisites = { Tech.name }
+    Tech.name = Tech_name
+    Tech.effects = { {
+        type = "unlock-recipe",
+        recipe = new_recipe.name
+    } }
+
+    --- Crear la nueva tecnología
+    GPrefix.extend(Tech)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+---------------------------------------------------------------------------------------------------
+
+
+
+
 
 ---------------------------------------------------------------------------------------------------
 
 --- Iniciar el modulo
-ThisMOD.Start()
+This_MOD.start()
 
 ---------------------------------------------------------------------------------------------------
