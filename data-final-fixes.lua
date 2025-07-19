@@ -123,48 +123,23 @@ function This_MOD.create_entity()
     local Entity = util.copy(This_MOD.ref.entity)
 
     --- Sobre escribir las propiedades
-    Entity.type = This_MOD.duplicate.type
-    Entity.name = This_MOD.prefix .. This_MOD.duplicate.name
+    Entity.type = This_MOD.duplicate.entity.type
+    Entity.name = This_MOD.prefix .. This_MOD.duplicate.entity.name
 
     Entity.localised_name = { "", { "entity-name." .. This_MOD.duplicate.entity.name } }
     Entity.localised_description = { "", { "entity-description." .. This_MOD.duplicate.entity.name } }
 
-    Entity.icons = This_MOD.duplicate.icons
-    Entity.picture = This_MOD.duplicate.picture
+    Entity.icons = This_MOD.duplicate.entity.icons
+    Entity.picture = This_MOD.duplicate.entity.picture
 
     local Result = Entity.minable.results
     Result = GPrefix.get_table(Result, "name", This_MOD.ref.item.name)
-    Result.name = This_MOD.prefix .. This_MOD.duplicate.name
+    Result.name = This_MOD.prefix .. This_MOD.duplicate.entity.name
 
     --- Crear el prototipo
     GPrefix.extend( Entity )
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    if true then return end
-
-    --- Renombrar
-    local Chest = This_MOD.Info.Entities.Chest
-    local RefEntity = This_MOD.Info.Entities.Ref
-    local RefItem = This_MOD.Info.Items.Ref
-
-    --- Nuevo prototipo
-    local Entity = util.copy(RefEntity)
-
-    --- Sobre escribir las propiedades
-    Entity.type = Chest.type
-    Entity.name = This_MOD.NewNombre
-    Entity.localised_name = { "", { "entity-name." .. Chest.name } }
-    Entity.localised_description = nil
-    Entity.icons = { { icon = Chest.icon } }
-    Entity.picture = Chest.picture
-
-    local Result = Entity.minable.results
-    Result = GPrefix.get_table(Result, "name", RefItem.name)
-    Result.name = This_MOD.NewNombre
-
-    --- Crear el prototipo
-    GPrefix.addDataRaw({ Entity })
 end
 
 --- Crear la receta
