@@ -1,0 +1,12 @@
+{
+  "name": "zzzYAIM0425-0800-linked-chest",
+  "version": "0.0.1",
+  "title": "zzzYAIM0425 0800 Linked chest",
+  "author": "YAIM904",
+  "factorio_version": "2.0",
+  "description": "Allows sending of items from anywhere to anywhere, even between planets. Unlimited distances. No surface restrictions. [[I accept suggestions]]",
+  "dependencies": [
+    "base",
+    "zzzYAIM0425-0000-lib"
+  ]
+}
