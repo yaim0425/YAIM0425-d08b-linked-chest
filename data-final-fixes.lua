@@ -20,10 +20,10 @@ function ThisMOD.Start()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Crear los nuevos prototipos
-    ThisMOD.CreateItem()
-    ThisMOD.CreateEntity()
-    ThisMOD.CreateRecipe()
+    -- --- Crear los nuevos prototipos
+    -- ThisMOD.CreateItem()
+    -- ThisMOD.CreateEntity()
+    -- ThisMOD.CreateRecipe()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
