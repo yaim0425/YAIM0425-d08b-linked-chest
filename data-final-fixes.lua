@@ -37,10 +37,10 @@ function This_MOD.setting_mod()
 
     --- Información de referencia
     This_MOD.ref = {}
-    This_MOD.ref.name = "requester-chest"
-    This_MOD.ref.entity = GPrefix.entities[This_MOD.ref.name]
-    This_MOD.ref.recipe = GPrefix.recipes[This_MOD.ref.name][1]
-    This_MOD.ref.item = GPrefix.items[This_MOD.ref.name]
+    This_MOD.ref.name = false
+    This_MOD.ref.entity = false
+    This_MOD.ref.recipe = false
+    This_MOD.ref.item = false
 
     --- Información a duplicar
     This_MOD.duplicate = {}
@@ -144,6 +144,37 @@ end
 
 --- Crear la receta
 function This_MOD.create_recipe()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Nuevo prototipo
+    local Recipe = util.copy(RefRecipe)
+
+    --- Sobre escribir las propiedades
+    Recipe.name = This_MOD.NewNombre
+    Recipe.localised_name = { "", { "entity-name." .. Chest.name } }
+    Recipe.localised_description = nil
+    Recipe.icons = { { icon = Chest.icon } }
+
+    local Result = GPrefix.get_table(Recipe.results, "name", RefItem.name)
+    Result.name = This_MOD.NewNombre
+
+    local order = tonumber(Recipe.order) + 1
+    Recipe.order = GPrefix.pad_left(#Recipe.order, order)
+
+    --- Crear el prototipo
+    GPrefix.addDataRaw({ Recipe })
+    GPrefix.addRecipeToTechnology(RefRecipe.name, nil, Recipe)
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    if true then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     --- Renombrar
     local Chest = This_MOD.Info.Items.Chest
     local RefRecipe = This_MOD.Info.Recipes.Ref
