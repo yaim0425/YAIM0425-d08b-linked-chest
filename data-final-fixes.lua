@@ -4,16 +4,16 @@
 
 --- Contenedor de funciones y datos usados
 --- unicamente en este archivo
-local ThisMOD = {}
+local This_MOD = {}
 
 ---------------------------------------------------------------------------------------------------
 
 --- Iniciar el modulo
-function ThisMOD.Start()
+function This_MOD.Start()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Valores de la referencia
-    ThisMOD.setSetting()
+    This_MOD.setSetting()
 
     -- --- Entidades a afectar
     -- ThisMOD.BuildInfo()
@@ -29,21 +29,21 @@ function ThisMOD.Start()
 end
 
 --- Valores de la referencia
-function ThisMOD.setSetting()
+function This_MOD.setSetting()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Otros valores
-    ThisMOD.Prefix    = "zzzYAIM0425-0800-"
-    ThisMOD.name      = "linked-chest"
+    This_MOD.Prefix    = "zzzYAIM0425-0800-"
+    This_MOD.name      = "linked-chest"
 
     --- Elemento a duplicar
-    ThisMOD.Entity    = "linked-chest"
+    This_MOD.Entity    = "linked-chest"
 
     --- Información de referencia
-    ThisMOD.Info      = {}
+    This_MOD.Info      = {}
 
     --- Nombre a usar
-    ThisMOD.NewNombre = ThisMOD.Prefix .. ThisMOD.Entity
+    This_MOD.NewNombre = This_MOD.Prefix .. This_MOD.Entity
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -57,21 +57,21 @@ end
 ---------------------------------------------------------------------------------------------------
 
 --- Entidades a afectar
-function ThisMOD.BuildInfo()
+function This_MOD.BuildInfo()
     --- Espacios a usar
-    ThisMOD.Info.Entities = {}
-    ThisMOD.Info.Recipes = {}
-    ThisMOD.Info.Items = {}
+    This_MOD.Info.Entities = {}
+    This_MOD.Info.Recipes = {}
+    This_MOD.Info.Items = {}
 
     --- Renombrar
-    local Entities = ThisMOD.Info.Entities
-    local Recipes = ThisMOD.Info.Recipes
-    local Items = ThisMOD.Info.Items
+    local Entities = This_MOD.Info.Entities
+    local Recipes = This_MOD.Info.Recipes
+    local Items = This_MOD.Info.Items
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Duplicar la entidad objetivo
-    Entities.Chest = data.raw["linked-container"][ThisMOD.Entity]
+    Entities.Chest = data.raw["linked-container"][This_MOD.Entity]
     Entities.Chest = util.copy(Entities.Chest)
 
     --- Ajustar la parte de mineria
@@ -93,7 +93,7 @@ function ThisMOD.BuildInfo()
 
     --- Duplicar el objeto
     local Result = Entities.Chest.minable.results
-    Result = GPrefix.get_table(Result, "name", ThisMOD.Entity)
+    Result = GPrefix.get_table(Result, "name", This_MOD.Entity)
     Items.Chest = data.raw.item[Result.name]
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -125,19 +125,19 @@ function ThisMOD.BuildInfo()
 end
 
 --- Crear el nuevo objeto
-function ThisMOD.CreateItem()
+function This_MOD.CreateItem()
     --- Renombrar
-    local Chest = ThisMOD.Info.Items.Chest
-    local Ref = ThisMOD.Info.Items.Ref
+    local Chest = This_MOD.Info.Items.Chest
+    local Ref = This_MOD.Info.Items.Ref
 
     --- Nuevo prototipo
     local Item = util.copy(Ref)
 
     --- Sobre escribir las propiedades
-    Item.name = ThisMOD.NewNombre
+    Item.name = This_MOD.NewNombre
     Item.localised_name = { "", { "entity-name." .. Chest.name } }
     Item.localised_description = nil
-    Item.place_result = ThisMOD.NewNombre
+    Item.place_result = This_MOD.NewNombre
     Item.icons = { { icon = Chest.icon } }
 
     local order = tonumber(Item.order) + 1
@@ -148,18 +148,18 @@ function ThisMOD.CreateItem()
 end
 
 --- Crear la nueva entidad
-function ThisMOD.CreateEntity()
+function This_MOD.CreateEntity()
     --- Renombrar
-    local Chest = ThisMOD.Info.Entities.Chest
-    local RefEntity = ThisMOD.Info.Entities.Ref
-    local RefItem = ThisMOD.Info.Items.Ref
+    local Chest = This_MOD.Info.Entities.Chest
+    local RefEntity = This_MOD.Info.Entities.Ref
+    local RefItem = This_MOD.Info.Items.Ref
 
     --- Nuevo prototipo
     local Entity = util.copy(RefEntity)
 
     --- Sobre escribir las propiedades
     Entity.type = Chest.type
-    Entity.name = ThisMOD.NewNombre
+    Entity.name = This_MOD.NewNombre
     Entity.localised_name = { "", { "entity-name." .. Chest.name } }
     Entity.localised_description = nil
     Entity.icons = { { icon = Chest.icon } }
@@ -167,30 +167,30 @@ function ThisMOD.CreateEntity()
 
     local Result = Entity.minable.results
     Result = GPrefix.get_table(Result, "name", RefItem.name)
-    Result.name = ThisMOD.NewNombre
+    Result.name = This_MOD.NewNombre
 
     --- Crear el prototipo
     GPrefix.addDataRaw({ Entity })
 end
 
 --- Crear la receta
-function ThisMOD.CreateRecipe()
+function This_MOD.CreateRecipe()
     --- Renombrar
-    local Chest = ThisMOD.Info.Items.Chest
-    local RefRecipe = ThisMOD.Info.Recipes.Ref
-    local RefItem = ThisMOD.Info.Items.Ref
+    local Chest = This_MOD.Info.Items.Chest
+    local RefRecipe = This_MOD.Info.Recipes.Ref
+    local RefItem = This_MOD.Info.Items.Ref
 
     --- Nuevo prototipo
     local Recipe = util.copy(RefRecipe)
 
     --- Sobre escribir las propiedades
-    Recipe.name = ThisMOD.NewNombre
+    Recipe.name = This_MOD.NewNombre
     Recipe.localised_name = { "", { "entity-name." .. Chest.name } }
     Recipe.localised_description = nil
     Recipe.icons = { { icon = Chest.icon } }
 
     local Result = GPrefix.get_table(Recipe.results, "name", RefItem.name)
-    Result.name = ThisMOD.NewNombre
+    Result.name = This_MOD.NewNombre
 
     local order = tonumber(Recipe.order) + 1
     Recipe.order = GPrefix.pad_left(#Recipe.order, order)
@@ -209,6 +209,6 @@ end
 ---------------------------------------------------------------------------------------------------
 
 --- Iniciar el modulo
-ThisMOD.Start()
+This_MOD.Start()
 
 ---------------------------------------------------------------------------------------------------
