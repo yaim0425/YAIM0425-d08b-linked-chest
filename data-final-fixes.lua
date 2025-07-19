@@ -88,6 +88,7 @@ function This_MOD.get_ref()
     This_MOD.ref.entity = GPrefix.entities[This_MOD.ref.name]
     This_MOD.ref.recipe = GPrefix.recipes[This_MOD.ref.name][1]
     This_MOD.ref.item = GPrefix.items[This_MOD.ref.name]
+    This_MOD.ref.tech = GPrefix.get_technology(This_MOD.ref.recipe)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
