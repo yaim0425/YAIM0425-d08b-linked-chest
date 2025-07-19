@@ -18,15 +18,12 @@ function This_MOD.start()
     --- Valores de la referencia
     This_MOD.setting_mod()
 
-    -- --- Entidades a afectar
-    -- This_MOD.get_chest()
-
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    -- --- Crear los nuevos prototipos
-    -- This_MOD.CreateItem()
-    -- This_MOD.CreateEntity()
-    -- This_MOD.CreateRecipe()
+    --- Crear los nuevos prototipos
+    This_MOD.create_item()
+    This_MOD.create_entity()
+    This_MOD.create_recipe()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -59,47 +56,8 @@ end
 
 ---------------------------------------------------------------------------------------------------
 
---- Entidades a afectar
-function This_MOD.get_chest()
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    -- --- Posibles objetos de referencia
-    -- local Chest = {}
-    -- table.insert(Chest, "buffer-chest")
-    -- table.insert(Chest, "storage-chest")
-    -- table.insert(Chest, "requester-chest")
-    -- table.insert(Chest, "active-provider-chest")
-    -- table.insert(Chest, "passive-provider-chest")
-
-    -- --- Objeto de referencia
-    -- This_MOD.entity = data.raw["linked-container"][This_MOD.ref]
-    -- This_MOD.entity.inventory_size = This_MOD.entity.inventory_size or 0
-    -- for _, name in pairs(Chest) do
-    --     local Entiy = GPrefix.entities[name]
-    --     local Old_size = This_MOD.entity.inventory_size
-    --     local New_size = Entiy.inventory_size or 0
-
-    --     if Old_size < New_size then
-    --         This_MOD.entity = Entiy
-    --     end
-    -- end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Guardar la información
-    This_MOD.entity = GPrefix.entities[This_MOD.ref]
-    This_MOD.item = GPrefix.get_item_create_entity(This_MOD.entity)
-    This_MOD.recipe = GPrefix.recipes[This_MOD.ref][1]
-
-    This_MOD.entity = util.copy(This_MOD.entity)
-    This_MOD.item = util.copy(This_MOD.item)
-    This_MOD.recipe = util.copy(This_MOD.recipe)
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
 --- Crear el nuevo objeto
-function This_MOD.CreateItem()
+function This_MOD.create_item()
     --- Renombrar
     local Chest = This_MOD.Info.Items.Chest
     local Ref = This_MOD.Info.Items.Ref
@@ -122,7 +80,7 @@ function This_MOD.CreateItem()
 end
 
 --- Crear la nueva entidad
-function This_MOD.CreateEntity()
+function This_MOD.create_entity()
     --- Renombrar
     local Chest = This_MOD.Info.Entities.Chest
     local RefEntity = This_MOD.Info.Entities.Ref
@@ -148,7 +106,7 @@ function This_MOD.CreateEntity()
 end
 
 --- Crear la receta
-function This_MOD.CreateRecipe()
+function This_MOD.create_recipe()
     --- Renombrar
     local Chest = This_MOD.Info.Items.Chest
     local RefRecipe = This_MOD.Info.Recipes.Ref
