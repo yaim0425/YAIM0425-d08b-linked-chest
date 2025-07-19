@@ -103,7 +103,7 @@ function This_MOD.create_item()
     --- Sobre escribir las propiedades
     Item.name = This_MOD.prefix .. This_MOD.duplicate.item.name
     Item.icons = This_MOD.duplicate.item.icons
-    Item.place_result = This_MOD.prefix .. Item.place_result
+    Item.place_result = This_MOD.prefix .. This_MOD.duplicate.entity.name
 
     Item.localised_name = { "", { "entity-name." .. This_MOD.duplicate.entity.name } }
     Item.localised_description = { "", { "entity-description." .. This_MOD.duplicate.entity.name } }
@@ -136,7 +136,7 @@ function This_MOD.create_entity()
 
     local Result = Entity.minable.results
     Result = GPrefix.get_table(Result, "name", This_MOD.ref.item.name)
-    Result.name = This_MOD.prefix .. This_MOD.duplicate.entity.name
+    Result.name = This_MOD.prefix .. This_MOD.duplicate.item.name
 
     --- Crear el prototipo
     GPrefix.extend(Entity)
@@ -152,14 +152,14 @@ function This_MOD.create_recipe()
     local Recipe = util.copy(This_MOD.ref.recipe)
 
     --- Sobre escribir las propiedades
-    Recipe.name = This_MOD.prefix .. Recipe.name
+    Recipe.name = This_MOD.prefix .. This_MOD.duplicate.item.name
     Recipe.icons = This_MOD.duplicate.entity.icons
 
     Recipe.localised_name = { "", { "entity-name." .. This_MOD.duplicate.entity.name } }
     Recipe.localised_description = { "", { "entity-description." .. This_MOD.duplicate.entity.name } }
 
     local Result = GPrefix.get_table(Recipe.results, "name", This_MOD.ref.item.name)
-    Result.name = This_MOD.prefix .. Result.name
+    Result.name = This_MOD.prefix .. This_MOD.duplicate.item.name
 
     local order = tonumber(Recipe.order) + 1
     Recipe.order = GPrefix.pad_left_zeros(#Recipe.order, order)
@@ -171,37 +171,6 @@ function This_MOD.create_recipe()
     )
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    if true then return end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Renombrar
-    local Chest = This_MOD.Info.Items.Chest
-    local RefRecipe = This_MOD.Info.Recipes.Ref
-    local RefItem = This_MOD.Info.Items.Ref
-
-    --- Nuevo prototipo
-    local Recipe = util.copy(RefRecipe)
-
-    --- Sobre escribir las propiedades
-    Recipe.name = This_MOD.NewNombre
-    Recipe.localised_name = { "", { "entity-name." .. Chest.name } }
-    Recipe.localised_description = nil
-    Recipe.icons = { { icon = Chest.icon } }
-
-    local Result = GPrefix.get_table(Recipe.results, "name", RefItem.name)
-    Result.name = This_MOD.NewNombre
-
-    local order = tonumber(Recipe.order) + 1
-    Recipe.order = GPrefix.pad_left(#Recipe.order, order)
-
-    --- Crear el prototipo
-    GPrefix.addDataRaw({ Recipe })
-    GPrefix.addRecipeToTechnology(RefRecipe.name, nil, Recipe)
 end
 
 ---------------------------------------------------------------------------------------------------
