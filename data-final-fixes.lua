@@ -10,20 +10,28 @@ local ThisMOD = {}
 
 --- Iniciar el modulo
 function ThisMOD.Start()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     --- Valores de la referencia
     ThisMOD.setSetting()
 
-    --- Entidades a afectar
-    ThisMOD.BuildInfo()
+    -- --- Entidades a afectar
+    -- ThisMOD.BuildInfo()
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Crear los nuevos prototipos
     ThisMOD.CreateItem()
     ThisMOD.CreateEntity()
     ThisMOD.CreateRecipe()
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 --- Valores de la referencia
 function ThisMOD.setSetting()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     --- Otros valores
     ThisMOD.Prefix    = "zzzYAIM0425-0800-"
     ThisMOD.name      = "linked-chest"
@@ -36,6 +44,8 @@ function ThisMOD.setSetting()
 
     --- Nombre a usar
     ThisMOD.NewNombre = ThisMOD.Prefix .. ThisMOD.Entity
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 ---------------------------------------------------------------------------------------------------
