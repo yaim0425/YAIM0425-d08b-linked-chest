@@ -12,8 +12,11 @@ local This_MOD = {}
 function This_MOD.start()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+    --- Obtener información desde el nombre de MOD
+    GPrefix.split_name_folder(This_MOD)
+
     --- Valores de la referencia
-    This_MOD.setSetting()
+    This_MOD.setting_mod()
 
     -- --- Entidades a afectar
     -- This_MOD.BuildInfo()
@@ -29,21 +32,16 @@ function This_MOD.start()
 end
 
 --- Valores de la referencia
-function This_MOD.setSetting()
+function This_MOD.setting_mod()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Otros valores
-    This_MOD.Prefix    = "zzzYAIM0425-0800-"
-    This_MOD.name      = "linked-chest"
-
     --- Elemento a duplicar
-    This_MOD.Entity    = "linked-chest"
+    This_MOD.entity_ref = "linked-chest"
 
     --- Información de referencia
-    This_MOD.Info      = {}
-
-    --- Nombre a usar
-    This_MOD.NewNombre = This_MOD.Prefix .. This_MOD.Entity
+    This_MOD.entity = {}
+    This_MOD.recipe = {}
+    This_MOD.item = {}
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -71,7 +69,7 @@ function This_MOD.BuildInfo()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Duplicar la entidad objetivo
-    Entities.Chest = data.raw["linked-container"][This_MOD.Entity]
+    Entities.Chest = data.raw["linked-container"][This_MOD.entity_ref]
     Entities.Chest = util.copy(Entities.Chest)
 
     --- Ajustar la parte de mineria
@@ -93,7 +91,7 @@ function This_MOD.BuildInfo()
 
     --- Duplicar el objeto
     local Result = Entities.Chest.minable.results
-    Result = GPrefix.get_table(Result, "name", This_MOD.Entity)
+    Result = GPrefix.get_table(Result, "name", This_MOD.entity_ref)
     Items.Chest = data.raw.item[Result.name]
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
