@@ -18,8 +18,8 @@ function This_MOD.start()
     --- Valores de la referencia
     This_MOD.setting_mod()
 
-    --- Entidades a afectar
-    This_MOD.get_chest()
+    -- --- Entidades a afectar
+    -- This_MOD.get_chest()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -35,13 +35,18 @@ end
 function This_MOD.setting_mod()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Elemento a duplicar
-    This_MOD.ref = "linked-chest"
-
     --- Información de referencia
-    This_MOD.entity = {}
-    This_MOD.recipe = {}
-    This_MOD.item = {}
+    This_MOD.ref = {}
+    This_MOD.ref.name = "requester-chest"
+    This_MOD.ref.entity = GPrefix.entities[This_MOD.ref.name]
+    This_MOD.ref.recipe = GPrefix.recipes[This_MOD.ref.name][1]
+    This_MOD.ref.item = GPrefix.items[This_MOD.ref.name]
+
+    --- Información a duplicar
+    This_MOD.duplicate = {}
+    This_MOD.duplicate.name = "linked-chest"
+    This_MOD.duplicate.entity = data.raw["linked-container"][This_MOD.duplicate.name]
+    This_MOD.duplicate.item = data.raw["item"][This_MOD.duplicate.name]
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -58,35 +63,38 @@ end
 function This_MOD.get_chest()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Posibles objetos de referencia
-    local Chest = {}
-    table.insert(Chest, "buffer-chest")
-    table.insert(Chest, "storage-chest")
-    table.insert(Chest, "requester-chest")
-    table.insert(Chest, "active-provider-chest")
-    table.insert(Chest, "passive-provider-chest")
+    -- --- Posibles objetos de referencia
+    -- local Chest = {}
+    -- table.insert(Chest, "buffer-chest")
+    -- table.insert(Chest, "storage-chest")
+    -- table.insert(Chest, "requester-chest")
+    -- table.insert(Chest, "active-provider-chest")
+    -- table.insert(Chest, "passive-provider-chest")
 
-    --- Objeto de referencia
-    This_MOD.entity = data.raw["linked-container"][This_MOD.ref]
-    This_MOD.entity.inventory_size = This_MOD.entity.inventory_size or 0
-    for _, name in pairs(Chest) do
-        local Entiy = GPrefix.entities[name]
-GPrefix.var_dump(Entiy)
-        if This_MOD.entity.inventory_size < Entiy.inventory_size then
-            This_MOD.entity = Entiy
-        end
-    end
+    -- --- Objeto de referencia
+    -- This_MOD.entity = data.raw["linked-container"][This_MOD.ref]
+    -- This_MOD.entity.inventory_size = This_MOD.entity.inventory_size or 0
+    -- for _, name in pairs(Chest) do
+    --     local Entiy = GPrefix.entities[name]
+    --     local Old_size = This_MOD.entity.inventory_size
+    --     local New_size = Entiy.inventory_size or 0
+
+    --     if Old_size < New_size then
+    --         This_MOD.entity = Entiy
+    --     end
+    -- end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Guardar la información
+    This_MOD.entity = GPrefix.entities[This_MOD.ref]
     This_MOD.item = GPrefix.get_item_create_entity(This_MOD.entity)
-    This_MOD.recipe = GPrefix.recipes[This_MOD.item][1]
+    This_MOD.recipe = GPrefix.recipes[This_MOD.ref][1]
 
     This_MOD.entity = util.copy(This_MOD.entity)
-    This_MOD.recipe = util.copy(This_MOD.recipe)
     This_MOD.item = util.copy(This_MOD.item)
--- GPrefix.var_dump(This_MOD)
+    This_MOD.recipe = util.copy(This_MOD.recipe)
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
