@@ -18,6 +18,9 @@ function This_MOD.start()
     --- Valores de la referencia
     This_MOD.setting_mod()
 
+    --- Entidades a afectar
+    This_MOD.get_ref()
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Crear los nuevos prototipos
@@ -86,6 +89,7 @@ function This_MOD.get_ref()
     This_MOD.ref.recipe = GPrefix.recipes[This_MOD.ref.name][1]
     This_MOD.ref.item = GPrefix.items[This_MOD.ref.name]
 
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 --- Crear el nuevo objeto
