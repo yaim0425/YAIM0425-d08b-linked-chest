@@ -58,6 +58,28 @@ end
 
 --- Crear el nuevo objeto
 function This_MOD.create_item()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Nuevo prototipo
+    local Item = util.copy(This_MOD.duplicate.item)
+
+    --- Sobre escribir las propiedades
+    Item.name = This_MOD.prefix .. Item.name
+    Item.place_result = This_MOD.prefix .. Item.place_result
+
+    Item.localised_name = { "", { "entity-name." .. This_MOD.duplicate.entity.name } }
+    Item.localised_description = { "", { "entity-description." .. This_MOD.duplicate.entity.name } }
+
+    local order = tonumber(Item.order) + 1
+    Item.order = GPrefix.pad_left_zeros(#Item.order, order)
+
+    --- Crear el objeto
+    GPrefix.extend(Item)
+
+    if true then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     --- Renombrar
     local Chest = This_MOD.Info.Items.Chest
     local Ref = This_MOD.Info.Items.Ref
