@@ -76,7 +76,7 @@ function This_MOD.get_ref()
     local Order_chest = {}
     for _, name in pairs(Chest) do
         local Item = GPrefix.items[name]
-        Order_chest[Item.order] = Item
+        Order_chest[Item.order] = name
         table.insert(Orders, Item.order)
     end
 
