@@ -36,12 +36,12 @@ function This_MOD.setting_mod()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Elemento a duplicar
-    This_MOD.entity_ref = "linked-chest"
+    This_MOD.type = "linked-container"
 
     --- Información de referencia
-    This_MOD.entity = {}
+    This_MOD.entities = {}
     This_MOD.recipe = {}
-    This_MOD.item = {}
+    This_MOD.items = {}
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -69,7 +69,7 @@ function This_MOD.BuildInfo()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Duplicar la entidad objetivo
-    Entities.Chest = data.raw["linked-container"][This_MOD.entity_ref]
+    Entities.Chest = data.raw["linked-container"][This_MOD.type]
     Entities.Chest = util.copy(Entities.Chest)
 
     --- Ajustar la parte de mineria
@@ -89,9 +89,11 @@ function This_MOD.BuildInfo()
         minable.count = nil
     end
 
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     --- Duplicar el objeto
     local Result = Entities.Chest.minable.results
-    Result = GPrefix.get_table(Result, "name", This_MOD.entity_ref)
+    Result = GPrefix.get_table(Result, "name", This_MOD.type)
     Items.Chest = data.raw.item[Result.name]
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -208,5 +210,6 @@ end
 
 --- Iniciar el modulo
 This_MOD.start()
+ERROR()
 
 ---------------------------------------------------------------------------------------------------
