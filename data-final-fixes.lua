@@ -23,7 +23,7 @@ function This_MOD.start()
     --- Crear los nuevos prototipos
     This_MOD.create_item()
     This_MOD.create_entity()
-    This_MOD.create_recipe()
+    -- This_MOD.create_recipe()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -56,6 +56,38 @@ end
 
 ---------------------------------------------------------------------------------------------------
 
+--- Entidades a afectar
+function This_MOD.get_ref()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Posibles objetos de referencia
+    local Chest = {}
+    table.insert(Chest, "storage-chest")
+    table.insert(Chest, "passive-provider-chest")
+    table.insert(Chest, "requester-chest")
+    table.insert(Chest, "buffer-chest")
+    table.insert(Chest, "active-provider-chest")
+
+    --- Objeto de referencia
+    local Orders = {}
+    local Order_chest = {}
+    for _, name in pairs(Chest) do
+        local Item = GPrefix.items[name]
+        Order_chest[Item.order] = Item
+        table.insert(Orders, Item.order)
+    end
+
+    --- Ordenar los objetos
+    table.sort(Orders)
+
+    --- Información de referencia
+    This_MOD.ref.name = Order_chest[Orders[#Chest]]
+    This_MOD.ref.entity = GPrefix.entities[This_MOD.ref.name]
+    This_MOD.ref.recipe = GPrefix.recipes[This_MOD.ref.name][1]
+    This_MOD.ref.item = GPrefix.items[This_MOD.ref.name]
+
+end
+
 --- Crear el nuevo objeto
 function This_MOD.create_item()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -76,33 +108,37 @@ function This_MOD.create_item()
     --- Crear el objeto
     GPrefix.extend(Item)
 
-    if true then return end
-
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Renombrar
-    local Chest = This_MOD.Info.Items.Chest
-    local Ref = This_MOD.Info.Items.Ref
-
-    --- Nuevo prototipo
-    local Item = util.copy(Ref)
-
-    --- Sobre escribir las propiedades
-    Item.name = This_MOD.NewNombre
-    Item.localised_name = { "", { "entity-name." .. Chest.name } }
-    Item.localised_description = nil
-    Item.place_result = This_MOD.NewNombre
-    Item.icons = { { icon = Chest.icon } }
-
-    local order = tonumber(Item.order) + 1
-    Item.order = GPrefix.pad_left(#Item.order, order)
-
-    --- Crear el prototipo
-    GPrefix.addDataRaw({ Item })
 end
 
 --- Crear la nueva entidad
 function This_MOD.create_entity()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Nuevo prototipo
+    local Entity = util.copy(This_MOD.ref.entity)
+
+    --- Sobre escribir las propiedades
+    Entity.type = This_MOD.duplicate.type
+    Entity.name = This_MOD.prefix .. This_MOD.duplicate.name
+
+    Entity.localised_name = { "", { "entity-name." .. This_MOD.duplicate.entity.name } }
+    Entity.localised_description = { "", { "entity-description." .. This_MOD.duplicate.entity.name } }
+
+    Entity.icons = This_MOD.duplicate.icons
+    Entity.picture = This_MOD.duplicate.picture
+
+    local Result = Entity.minable.results
+    Result = GPrefix.get_table(Result, "name", This_MOD.ref.item.name)
+    Result.name = This_MOD.prefix .. This_MOD.duplicate.name
+
+    --- Crear el prototipo
+    GPrefix.extend( Entity )
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    if true then return end
+
     --- Renombrar
     local Chest = This_MOD.Info.Entities.Chest
     local RefEntity = This_MOD.Info.Entities.Ref
@@ -164,6 +200,6 @@ end
 
 --- Iniciar el modulo
 This_MOD.start()
-ERROR()
+-- ERROR()
 
 ---------------------------------------------------------------------------------------------------
