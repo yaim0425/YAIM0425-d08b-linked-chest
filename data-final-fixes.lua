@@ -37,10 +37,10 @@ function This_MOD.setting_mod()
 
     --- Información de referencia
     This_MOD.ref = {}
-    This_MOD.ref.name = false
-    This_MOD.ref.entity = false
-    This_MOD.ref.recipe = false
-    This_MOD.ref.item = false
+    This_MOD.ref.name = {}
+    This_MOD.ref.entity = {}
+    This_MOD.ref.recipe = {}
+    This_MOD.ref.item = {}
 
     --- Información a duplicar
     This_MOD.duplicate = {}
