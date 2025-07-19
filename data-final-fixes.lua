@@ -9,21 +9,21 @@ local This_MOD = {}
 ---------------------------------------------------------------------------------------------------
 
 --- Iniciar el modulo
-function This_MOD.Start()
+function This_MOD.start()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Valores de la referencia
     This_MOD.setSetting()
 
     -- --- Entidades a afectar
-    -- ThisMOD.BuildInfo()
+    -- This_MOD.BuildInfo()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     -- --- Crear los nuevos prototipos
-    -- ThisMOD.CreateItem()
-    -- ThisMOD.CreateEntity()
-    -- ThisMOD.CreateRecipe()
+    -- This_MOD.CreateItem()
+    -- This_MOD.CreateEntity()
+    -- This_MOD.CreateRecipe()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -209,6 +209,6 @@ end
 ---------------------------------------------------------------------------------------------------
 
 --- Iniciar el modulo
-This_MOD.Start()
+This_MOD.start()
 
 ---------------------------------------------------------------------------------------------------
