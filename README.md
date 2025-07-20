@@ -4,7 +4,9 @@
 
 This MOD allows **sending items from anywhere to anywhere**, even across planets or surfaces, with no distance or location limits.
 
-> 🧩 This MOD is part of the `zzzYAIM0425` series, designed to provide modular enhancements and utilities that refine the gameplay experience.
+> 🧩 Part of the [zzzYAIM0425 series](https://github.com/yaim0425), designed to offer modular improvements and utilities to enhance the game experience.  
+> 🔧 Depends on [`zzzYAIM0425 0000 lib`](https://github.com/yaim0425/zzzYAIM0425-0000-lib), which is handled automatically by the system.  
+> All its content is available to anyone who needs it; I'm open to changes, corrections, and suggestions.
 
 ## 📦 Purpose
 
