@@ -24,5 +24,7 @@ Facilita la **transferencia remota de objetos** mediante cofres enlazados, útil
 - Compatible con otros MODs logísticos  
 - Todo su contenido está disponible para quien lo necesite; estoy abierto a cambios, correcciones y sugerencias.
 
+## 🖼️ Capturas
+
 ![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/Screenshot%20(1).png)  
 ![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/Screenshot%20(2).png)
