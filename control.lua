@@ -98,7 +98,6 @@ end
 
 
 
-
 ---------------------------------------------------------------------------------------------------
 
 --- Obtener un canal
@@ -143,14 +142,13 @@ function This_MOD.get_link_id_of_index(Data)
 
     --- Variables a usar
     local Index = 0
-    local Key = Data.Entity.link_id
-    Key = GPrefix.pad_left_zeros(10, Key)
+    local Dropdown_index = Data.GUI.dropdown_channel.selected_index
 
     --- Buscar el index
     for key, _ in pairs(Data.channel) do
         Index = Index + 1
-        if key == Key then
-            return Index
+        if Index == Dropdown_index then
+            return tonumber(key)
         end
     end
 
@@ -183,7 +181,6 @@ end
 
 
 
-
 ---------------------------------------------------------------------------------------------------
 
 --- Crear o destruir el indicador
@@ -203,7 +200,7 @@ function This_MOD.toggle_gui(Data)
         if Data.GUI.frame_up then return false end
         if not Data.Entity then return false end
         if not Data.Entity.valid then return false end
-        if Data.Entity.name ~= This_MOD.ref.name then return false end
+        if not GPrefix.has_id(Data.Entity.name, This_MOD.id) then return false end
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -371,8 +368,8 @@ function This_MOD.check_channel()
             local Dropdown_index = Data.GUI.dropdown_channel.selected_index
             local Chest_index = This_MOD.get_index_of_link_id(Data)
             if not Chest_index or Dropdown_index ~= Chest_index then
-                This_MOD.toggle_gui(Data)
-                This_MOD.toggle_gui(Data)
+                This_MOD.toggle_gui(Data) --- Destruir
+                This_MOD.toggle_gui(Data) --- Construir
             end
         end
     end
