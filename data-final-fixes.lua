@@ -29,6 +29,12 @@ function This_MOD.start()
     This_MOD.create_recipe()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Estilos a usar
+    This_MOD.styles()
+    This_MOD.icon()
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 --- Valores de la referencia
@@ -47,6 +53,9 @@ function This_MOD.setting_mod()
     This_MOD.duplicate.name = "linked-chest"
     This_MOD.duplicate.entity = data.raw["linked-container"][This_MOD.duplicate.name]
     This_MOD.duplicate.item = data.raw["item"][This_MOD.duplicate.name]
+
+    --- Valores constante
+    This_MOD.graphics = "__" .. This_MOD.prefix .. This_MOD.name .. "__/graphics/"
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -103,9 +112,9 @@ function This_MOD.create_item()
     local Item = util.copy(This_MOD.ref.item)
 
     --- Sobre escribir las propiedades
-    Item.name = This_MOD.prefix .. This_MOD.duplicate.item.name
+    Item.name = This_MOD.prefix .. This_MOD.duplicate.name
     Item.icons = This_MOD.duplicate.item.icons
-    Item.place_result = This_MOD.prefix .. This_MOD.duplicate.entity.name
+    Item.place_result = This_MOD.prefix .. This_MOD.duplicate.name
 
     Item.localised_name = { "", { "entity-name." .. This_MOD.duplicate.entity.name } }
     Item.localised_description = { "", { "entity-description." .. This_MOD.duplicate.entity.name } }
@@ -128,17 +137,17 @@ function This_MOD.create_entity()
 
     --- Sobre escribir las propiedades
     Entity.type = This_MOD.duplicate.entity.type
-    Entity.name = This_MOD.prefix .. This_MOD.duplicate.entity.name
+    Entity.name = This_MOD.prefix .. This_MOD.duplicate.name
 
-    Entity.localised_name = { "", { "entity-name." .. This_MOD.duplicate.entity.name } }
-    Entity.localised_description = { "", { "entity-description." .. This_MOD.duplicate.entity.name } }
+    Entity.localised_name = { "", { "entity-name." .. This_MOD.duplicate.name } }
+    Entity.localised_description = { "", { "entity-description." .. This_MOD.duplicate.name } }
 
     Entity.icons = This_MOD.duplicate.entity.icons
     Entity.picture = This_MOD.duplicate.entity.picture
 
     local Result = Entity.minable.results
     Result = GPrefix.get_table(Result, "name", This_MOD.ref.item.name)
-    Result.name = This_MOD.prefix .. This_MOD.duplicate.item.name
+    Result.name = This_MOD.prefix .. This_MOD.duplicate.name
 
     --- Crear el prototipo
     GPrefix.extend(Entity)
@@ -154,14 +163,14 @@ function This_MOD.create_recipe()
     local Recipe = util.copy(This_MOD.ref.recipe)
 
     --- Sobre escribir las propiedades
-    Recipe.name = This_MOD.prefix .. This_MOD.duplicate.item.name
+    Recipe.name = This_MOD.prefix .. This_MOD.duplicate.name
     Recipe.icons = This_MOD.duplicate.entity.icons
 
-    Recipe.localised_name = { "", { "entity-name." .. This_MOD.duplicate.entity.name } }
-    Recipe.localised_description = { "", { "entity-description." .. This_MOD.duplicate.entity.name } }
+    Recipe.localised_name = { "", { "entity-name." .. This_MOD.duplicate.name } }
+    Recipe.localised_description = { "", { "entity-description." .. This_MOD.duplicate.name } }
 
     local Result = GPrefix.get_table(Recipe.results, "name", This_MOD.ref.item.name)
-    Result.name = This_MOD.prefix .. This_MOD.duplicate.item.name
+    Result.name = This_MOD.prefix .. This_MOD.duplicate.name
 
     local order = tonumber(Recipe.order) + 1
     Recipe.order = GPrefix.pad_left_zeros(#Recipe.order, order)
@@ -208,6 +217,132 @@ function This_MOD.create_tech(space, new_recipe)
     GPrefix.extend(Tech)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+---------------------------------------------------------------------------------------------------
+
+
+
+
+
+---------------------------------------------------------------------------------------------------
+
+--- Estilos a usar
+function This_MOD.styles()
+    --- Cambiar los guiones del nombre
+    local Prefix = string.gsub(This_MOD.prefix, "%-", "_")
+
+    --- Renombrar
+    local Styles = data.raw["gui-style"].default
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    ---> Multiuso
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    Styles[Prefix .. "flow_vertival_8"] = {
+        type = "vertical_flow_style",
+        vertical_spacing = 8
+    }
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    ---> Cabeza
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    Styles[Prefix .. "flow_head"] = {
+        type = "horizontal_flow_style",
+        horizontal_spacing = 8,
+        bottom_padding = 7
+    }
+    Styles[Prefix .. "label_title"] = {
+        type = "label_style",
+        parent = "frame_title",
+        button_padding = 3,
+        top_margin = -3
+    }
+    Styles[Prefix .. "empty_widget"] = {
+        type = "empty_widget_style",
+        parent = "draggable_space",
+        horizontally_stretchable = "on",
+        vertically_stretchable = "on",
+        height = 24
+    }
+    Styles[Prefix .. "button_close"] = {
+        type = "button_style",
+        parent = "close_button",
+        padding = 2,
+        margin = 0,
+        size = 24
+    }
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    ---> Cuerpo
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    Styles[Prefix .. "frame_entity"] = {
+        type = "frame_style",
+        parent = "entity_frame",
+        padding = 0
+    }
+    Styles[Prefix .. "frame_body"] = {
+        type = "frame_style",
+        parent = "entity_frame",
+        horizontally_stretchable = "off",
+        padding = 4
+    }
+    Styles[Prefix .. "drop_down_channel"] = {
+        type = "dropdown_style",
+        width = 250 + 32
+    }
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    ---> Nuevo canal
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    Styles[Prefix .. "button_red"] = {
+        type = "button_style",
+        parent = "tool_button_red",
+        padding = 0,
+        margin = 0,
+        size = 28
+    }
+    Styles[Prefix .. "button_green"] = {
+        type = "button_style",
+        parent = "tool_button_green",
+        padding = 0,
+        margin = 0,
+        size = 28
+    }
+    Styles[Prefix .. "button_blue"] = {
+        type = "button_style",
+        parent = "tool_button_blue",
+        padding = 0,
+        margin = 0,
+        size = 28
+    }
+    Styles[Prefix .. "button"] = {
+        type = "button_style",
+        parent = "button",
+        top_margin = 1,
+        padding = 0,
+        size = 28
+    }
+    Styles[Prefix .. "stretchable_textfield"] = {
+        type = "textbox_style",
+        width = 250
+    }
+end
+
+--- Icono para las imagenes
+function This_MOD.icon()
+    --- Validación
+    local Name = GPrefix.name .. "-icon"
+    if data.raw["virtual-signal"][Name] then return end
+
+    --- Crear la señal
+    GPrefix.extend({
+        type = "virtual-signal",
+        name = Name,
+        icon = This_MOD.graphics .. "icon.png",
+        icon_size = 40,
+        subgroup = "virtual-signal",
+        order = "z-z-o"
+    })
 end
 
 ---------------------------------------------------------------------------------------------------

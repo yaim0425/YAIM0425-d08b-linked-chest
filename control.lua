@@ -1,0 +1,391 @@
+---------------------------------------------------------------------------------------------------
+---> control.lua <---
+---------------------------------------------------------------------------------------------------
+
+--- Contenedor de funciones y datos usados
+--- unicamente en este archivo
+local This_MOD = {}
+
+---------------------------------------------------------------------------------------------------
+
+--- Cargar las funciones
+require("__zzzYAIM0425-0000-lib__/control")
+
+---------------------------------------------------------------------------------------------------
+
+--- Iniciar el modulo
+function This_MOD.start()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Obtener información desde el nombre de MOD
+    GPrefix.split_name_folder(This_MOD)
+
+    --- Valores de la referencia
+    This_MOD.setting_mod()
+
+    --- Cambiar la propiedad necesaria
+    This_MOD.load_events()
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+--- Valores de la referencia
+function This_MOD.setting_mod()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Información de referencia
+    This_MOD.ref = {}
+    This_MOD.ref.name = This_MOD.prefix .. "linked-chest"
+    This_MOD.ref.entity = prototypes.entity[This_MOD.ref.name]
+    This_MOD.ref.recipe = prototypes.recipe[This_MOD.ref.name]
+    This_MOD.ref.item = prototypes.item[This_MOD.ref.name]
+
+    --- Valores propios
+    This_MOD.channel_default = { This_MOD.prefix .. "default-channel" }
+    This_MOD.new_channel = { This_MOD.prefix .. "new-channel" }
+
+    --- Posibles estados de la ventana
+    This_MOD.action = {}
+    This_MOD.action.none = nil
+    This_MOD.action.build = 1
+    This_MOD.action.edit = 2
+    This_MOD.action.new_channel = 3
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+---------------------------------------------------------------------------------------------------
+
+--- Cargar los eventos a ejecutar
+function This_MOD.load_events()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    script.on_event({
+        defines.events.on_gui_opened,
+        defines.events.on_gui_closed
+    }, function(event)
+        This_MOD.toggle_gui(This_MOD.create_data(event))
+    end)
+
+    --- Verificar que la entidad tenga energía
+    script.on_nth_tick(30, This_MOD.check_channel)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+--- Crea y agrupar las variables a usar
+function This_MOD.create_data(event)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Consolidar la información
+    local Data = GPrefix.create_data(event or {}, This_MOD)
+    if not Data.gForce then return Data end
+    if not event then return Data end
+
+    --- Lista de los postes
+    Data.gForce.channel = Data.gForce.channel or {}
+    Data.channel = Data.gForce.channel
+
+    --- Devolver el consolidado de los datos
+    return Data
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+---------------------------------------------------------------------------------------------------
+
+
+
+
+
+---------------------------------------------------------------------------------------------------
+
+--- Obtener un canal
+function This_MOD.get_channel(Data, channel)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Cargar el poste del canal indicado
+    local Found = GPrefix.get_key(Data.channel, channel)
+    if Found then return channel end
+
+    --- Formato al indice
+    local Link_id = Data.Entity.link_id
+    Link_id = GPrefix.pad_left_zeros(10, Link_id)
+    if Data.channel[Link_id] then return end
+
+    --- Guardar el nuevo canal
+    Data.channel[Link_id] = channel
+
+    --- Devolver el canal indicado
+    return channel
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+--- Cambiar el canal
+function This_MOD.set_channel()
+end
+
+---------------------------------------------------------------------------------------------------
+
+--- Seleccionar un nuevo objeto
+function This_MOD.add_icon()
+end
+
+--- Validar el nombre del canal
+function This_MOD.validate_channel_name()
+end
+
+--- Obtener el canal seleccionado
+function This_MOD.get_link_id_of_index(Data)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Variables a usar
+    local Index = 0
+    local Dropdown_index = Data.GUI.dropdown_channel.selected_index
+
+    --- Buscar el index
+    for key, _ in pairs(Data.channel) do
+        Index = Index + 1
+        if Index == Dropdown_index then
+            return tonumber(key)
+        end
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+--- Obtener el canal seleccionado
+function This_MOD.get_index_of_link_id(Data)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Variables a usar
+    local Index = 0
+    local Key = Data.Entity.link_id
+    Key = GPrefix.pad_left_zeros(10, Key)
+
+    --- Buscar el index
+    for key, _ in pairs(Data.channel) do
+        Index = Index + 1
+        if key == Key then
+            return Index
+        end
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+---------------------------------------------------------------------------------------------------
+
+
+
+
+
+---------------------------------------------------------------------------------------------------
+
+--- Crear o destruir el indicador
+function This_MOD.toggle_gui(Data)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Validación
+    if not Data.gForces then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    local function validate_open()
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        ---> Validación
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        if Data.GUI.frame_up then return false end
+        if not Data.Entity then return false end
+        if not Data.Entity.valid then return false end
+        if not GPrefix.has_id(Data.Entity.name, This_MOD.id) then return false end
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        ---> Canal por defecto
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        This_MOD.get_channel({
+            Entity = { link_id = 0 },
+            channel = Data.channel
+        }, "0")
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        ---> Canal del cofre
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        This_MOD.get_channel(Data, "" .. Data.Entity.link_id)
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        ---> Aprovado
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        return true
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+    end
+    local function validate_close()
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        ---> Validación
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        if not Data.GUI.frame_up then return false end
+        if Data.GUI.Action == This_MOD.action.build then return false end
+        if not Data.Entity then return false end
+        if not Data.Entity.valid then return false end
+        if Data.Entity.name ~= This_MOD.ref.name then return false end
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        ---> Aprovado
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        return true
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    local function build()
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Cambiar los guiones del nombre
+        local Prefix = string.gsub(This_MOD.prefix, "%-", "_")
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Crear el cuadro principal
+        Data.GUI.frame_up = {}
+        Data.GUI.frame_up.type = "frame"
+        Data.GUI.frame_up.name = "frame_up"
+        Data.GUI.frame_up.direction = "horizontal"
+        Data.GUI.frame_up.anchor = {}
+        Data.GUI.frame_up.anchor.gui = defines.relative_gui_type.linked_container_gui
+        Data.GUI.frame_up.anchor.position = defines.relative_gui_position.top
+        Data.GUI.frame_up = Data.Player.gui.relative.add(Data.GUI.frame_up)
+        Data.GUI.frame_up.style = "frame"
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Efecto de profundidad
+        Data.GUI.frame_old_channel = {}
+        Data.GUI.frame_old_channel.type = "frame"
+        Data.GUI.frame_old_channel.name = "frame_old_channel"
+        Data.GUI.frame_old_channel.direction = "horizontal"
+        Data.GUI.frame_old_channel = Data.GUI.frame_up.add(Data.GUI.frame_old_channel)
+        Data.GUI.frame_old_channel.style = Prefix .. "frame_body"
+
+        --- Barra de movimiento
+        Data.GUI.dropdown_channel = {}
+        Data.GUI.dropdown_channel.type = "drop-down"
+        Data.GUI.dropdown_channel.name = "drop_down_channel"
+        Data.GUI.dropdown_channel = Data.GUI.frame_old_channel.add(Data.GUI.dropdown_channel)
+        Data.GUI.dropdown_channel.style = Prefix .. "drop_down_channel"
+
+        --- Cargar los canales
+        for _, channel in pairs(Data.channel) do
+            Data.GUI.dropdown_channel.add_item(channel)
+        end
+
+        --- Botón para aplicar los cambios
+        Data.GUI.button_edit = {}
+        Data.GUI.button_edit.type = "sprite-button"
+        Data.GUI.button_edit.name = "button_edit"
+        Data.GUI.button_edit.sprite = "utility/rename_icon"
+        Data.GUI.button_edit.tooltip = { This_MOD.prefix .. "edit-channel" }
+        Data.GUI.button_edit = Data.GUI.frame_old_channel.add(Data.GUI.button_edit)
+        Data.GUI.button_edit.style = Prefix .. "button_blue"
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+    end
+    local function destroy()
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        Data.GUI.frame_up.destroy()
+        Data.GPlayer.GUI = {}
+        Data.GUI = Data.GPlayer.GUI
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Acción a ejecutar
+    if validate_close() then
+        destroy()
+    elseif validate_open() then
+        Data.GUI.Action = This_MOD.action.build
+        build()
+        Data.GUI.Entity = Data.Entity
+        Data.GUI.dropdown_channel.selected_index = This_MOD.get_index_of_link_id(Data)
+        Data.GUI.Action = This_MOD.action.none
+    end
+end
+
+--- Verificar el cambio de cada canal
+function This_MOD.check_channel()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Cargar toda la información
+    local All = This_MOD.create_data()
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Recorrer cada jugador enlistado
+    for player_index, GPlayer in pairs(All.GPlayers) do
+        if GPlayer.GUI.Entity then
+            --- Consolidar información
+            local Data = This_MOD.create_data({
+                entity = GPlayer.GUI.Entity,
+                player_index = player_index
+            })
+
+            --- Validar cambio
+            local Dropdown_index = Data.GUI.dropdown_channel.selected_index
+            local Chest_index = This_MOD.get_index_of_link_id(Data)
+            if not Chest_index or Dropdown_index ~= Chest_index then
+                This_MOD.toggle_gui(Data) --- Destruir
+                This_MOD.toggle_gui(Data) --- Construir
+            end
+        end
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+---------------------------------------------------------------------------------------------------
+
+
+
+
+
+---------------------------------------------------------------------------------------------------
+
+--- Iniciar el modulo
+This_MOD.start()
+
+---------------------------------------------------------------------------------------------------
