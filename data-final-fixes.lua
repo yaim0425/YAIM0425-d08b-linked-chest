@@ -283,6 +283,7 @@ function This_MOD.styles()
     Styles[Prefix .. "frame_body"] = {
         type = "frame_style",
         parent = "entity_frame",
+        horizontally_stretchable = "off",
         padding = 4
     }
     Styles[Prefix .. "drop_down_channel"] = {

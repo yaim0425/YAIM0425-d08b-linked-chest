@@ -8,12 +8,8 @@ local This_MOD = {}
 
 ---------------------------------------------------------------------------------------------------
 
----------------------------------------------------------------------------------------------------
-
 --- Cargar las funciones
 require("__zzzYAIM0425-0000-lib__/control")
-
----------------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------------
 
@@ -53,9 +49,7 @@ function This_MOD.setting_mod()
     This_MOD.action.none = nil
     This_MOD.action.build = 1
     This_MOD.action.edit = 2
-    -- ThisMOD.action.apply = 3
-    -- ThisMOD.action.discard = 4
-    This_MOD.action.new_channel = 5
+    This_MOD.action.new_channel = 3
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -103,7 +97,57 @@ end
 
 
 ---------------------------------------------------------------------------------------------------
---- Desde acá empieza la parte GUI: Esta sección es para cambiar el canal -------------------------
+
+--- Obtener un canal
+function This_MOD.get_channel(Data, channel)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Cargar el poste del canal indicado
+    local Key = GPrefix.get_key(Data.channel, channel)
+    if Key then return channel end
+    if Data.channel[Data.Entity.link_id] then return end
+
+    --- Guardar el nuevo canal
+    Data.channel[Data.Entity.link_id] = channel
+
+    --- Devolver el canal indicado
+    return channel
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+--- Cambiar el canal
+function This_MOD.set_channel()
+end
+
+---------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------
+
+--- Seleccionar un nuevo objeto
+function This_MOD.add_icon()
+end
+
+--- Validar el nombre del canal
+function This_MOD.validate_channel_name()
+end
+
+--- Obtener el canal seleccionado
+function This_MOD.get_channel_pos()
+end
+
+---------------------------------------------------------------------------------------------------
+
+
+
+
+
+
 ---------------------------------------------------------------------------------------------------
 
 --- Crear o destruir el inicador
@@ -115,14 +159,14 @@ function This_MOD.toggle_gui(Data)
         if not Data.Entity.valid then return false end
         if Data.Entity.name ~= This_MOD.ref.name then return false end
 
-        --- Canal inexistente
-        if not Data.channel[Data.Entity.link_id] then
-            -- This_MOD.on_entity_created({
-            --     entity = Data.Node.entity,
-            --     force = Data.Node.entity.force
-            -- })
-        end
+        --- Canal por defecto
+        This_MOD.get_channel({
+            Entity = { link_id = 0 },
+            channel = Data.channel
+        }, This_MOD.channel_default)
 
+        --- Canal del cofre
+        This_MOD.get_channel(Data, tostring(Data.Entity.link_id))
         return true
     end
     local function validate_close()
@@ -178,7 +222,7 @@ function This_MOD.toggle_gui(Data)
 
         --- Cargar los canales
         for _, channel in pairs(Data.channel) do
-            Data.GUI.dropdown_channel.add_item(channel.name)
+            Data.GUI.dropdown_channel.add_item(channel)
         end
         Data.GUI.dropdown_channel.add_item(This_MOD.new_channel)
 
@@ -192,13 +236,13 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.button_edit.style = Prefix .. "button_blue"
 
         --- Botón para aplicar los cambios
-        Data.GUI.button_confirm = {}
-        Data.GUI.button_confirm.type = "sprite-button"
-        Data.GUI.button_confirm.name = "button_confirm"
-        Data.GUI.button_confirm.sprite = "utility/check_mark_white"
-        Data.GUI.button_confirm.tooltip = { "gui.confirm" }
-        Data.GUI.button_confirm = Data.GUI.frame_old_channel.add(Data.GUI.button_confirm)
-        Data.GUI.button_confirm.style = Prefix .. "button_green"
+        Data.GUI.button_refresh = {}
+        Data.GUI.button_refresh.type = "sprite-button"
+        Data.GUI.button_refresh.name = "button_refresh"
+        Data.GUI.button_refresh.sprite = "utility/refresh"
+        Data.GUI.button_refresh.tooltip = { "gui.refresh" }
+        Data.GUI.button_refresh = Data.GUI.frame_old_channel.add(Data.GUI.button_refresh)
+        Data.GUI.button_refresh.style = Prefix .. "button"
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
@@ -253,27 +297,3 @@ end
 This_MOD.start()
 
 ---------------------------------------------------------------------------------------------------
-
-
---[[ Código base
-    if true then return end
-
-    GPrefix.var_dump(event)
-
-    local player = game.get_player(event.player_index)
-    local anchor = {
-        gui = defines.relative_gui_type.linked_container_gui,
-        position = defines.relative_gui_position.top
-    }
-    local frame = player.gui.relative.add({
-        type = "frame",
-        name = "main",
-        anchor = anchor
-    })
-    frame.add({
-        type = "label",
-        caption = player.name
-    })
-    storage.algo = storage.algo or {}
-    storage.algo.frame = frame
-]]
