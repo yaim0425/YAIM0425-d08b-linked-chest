@@ -54,6 +54,9 @@ function This_MOD.setting_mod()
     This_MOD.duplicate.entity = data.raw["linked-container"][This_MOD.duplicate.name]
     This_MOD.duplicate.item = data.raw["item"][This_MOD.duplicate.name]
 
+    --- Valores constante
+    This_MOD.graphics = "__" .. This_MOD.prefix .. This_MOD.name .. "__/graphics/"
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
@@ -282,7 +285,7 @@ function This_MOD.styles()
         parent = "entity_frame",
         padding = 4
     }
-    Styles[Prefix .. "drop_down_channels"] = {
+    Styles[Prefix .. "drop_down_channel"] = {
         type = "dropdown_style",
         width = 250 + 32
     }

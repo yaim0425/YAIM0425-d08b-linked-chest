@@ -49,13 +49,13 @@ function This_MOD.setting_mod()
     This_MOD.new_channel = { This_MOD.prefix .. "new-channel" }
 
     --- Posibles estados de la ventana
-    This_MOD.Action = {}
-    This_MOD.Action.none = nil
-    This_MOD.Action.build = 1
-    This_MOD.Action.edit = 2
-    -- ThisMOD.Action.apply = 3
-    -- ThisMOD.Action.discard = 4
-    This_MOD.Action.new_channel = 5
+    This_MOD.action = {}
+    This_MOD.action.none = nil
+    This_MOD.action.build = 1
+    This_MOD.action.edit = 2
+    -- ThisMOD.action.apply = 3
+    -- ThisMOD.action.discard = 4
+    This_MOD.action.new_channel = 5
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -82,15 +82,12 @@ function This_MOD.create_data(event)
 
     --- Consolidar la información
     local Data = GPrefix.create_data(event or {}, This_MOD)
+    if not Data.gForce then return Data end
     if not event then return Data end
 
     --- Lista de los postes
     Data.gForce.channel = Data.gForce.channel or {}
     Data.channel = Data.gForce.channel
-
-    -- --- Lista de los transceiver
-    -- Data.gForce.node = Data.gForce.node or {}
-    -- Data.node = Data.gForce.node
 
     --- Devolver el consolidado de los datos
     return Data
@@ -113,13 +110,13 @@ end
 function This_MOD.toggle_gui(Data)
     local function validate_open()
         --- Validación
+        if Data.GUI.frame_up then return false end
         if not Data.Entity then return false end
         if not Data.Entity.valid then return false end
         if Data.Entity.name ~= This_MOD.ref.name then return false end
 
         --- Canal inexistente
         if not Data.channel[Data.Entity.link_id] then
-            GPrefix.var_dump(Data.Entity.link_id)
             -- This_MOD.on_entity_created({
             --     entity = Data.Node.entity,
             --     force = Data.Node.entity.force
@@ -129,9 +126,8 @@ function This_MOD.toggle_gui(Data)
         return true
     end
     local function validate_close()
-        if Data.GUI.Action == This_MOD.Action.build then return false end
-        -- if not Data.Event.element then return false end
-        -- if Data.Event.element == Data.GUI.frame_main then return true end
+        if not Data.GUI.frame_up then return false end
+        if Data.GUI.Action == This_MOD.action.build then return false end
         if not Data.Entity then return false end
         if not Data.Entity.valid then return false end
         if Data.Entity.name ~= This_MOD.ref.name then return false end
@@ -149,15 +145,15 @@ function This_MOD.toggle_gui(Data)
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Crear el cuadro principal
-        Data.GUI.frame_main = {}
-        Data.GUI.frame_main.type = "frame"
-        Data.GUI.frame_main.name = "frame_main"
-        Data.GUI.frame_main.direction = "horizontal"
-        Data.GUI.frame_main.anchor = {}
-        Data.GUI.frame_main.anchor.gui = defines.relative_gui_type.linked_container_gui
-        Data.GUI.frame_main.anchor.position = defines.relative_gui_position.top
-        Data.GUI.frame_main = Data.Player.gui.relative.add(Data.GUI.frame_main)
-        Data.GUI.frame_main.style = "frame"
+        Data.GUI.frame_up = {}
+        Data.GUI.frame_up.type = "frame"
+        Data.GUI.frame_up.name = "frame_up"
+        Data.GUI.frame_up.direction = "horizontal"
+        Data.GUI.frame_up.anchor = {}
+        Data.GUI.frame_up.anchor.gui = defines.relative_gui_type.linked_container_gui
+        Data.GUI.frame_up.anchor.position = defines.relative_gui_position.top
+        Data.GUI.frame_up = Data.Player.gui.relative.add(Data.GUI.frame_up)
+        Data.GUI.frame_up.style = "frame"
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -166,25 +162,25 @@ function This_MOD.toggle_gui(Data)
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Efecto de profundidad
-        Data.GUI.frame_old_channels = {}
-        Data.GUI.frame_old_channels.type = "frame"
-        Data.GUI.frame_old_channels.name = "frame_old_channels"
-        Data.GUI.frame_old_channels.direction = "horizontal"
-        Data.GUI.frame_old_channels = Data.GUI.frame_main.add(Data.GUI.frame_old_channels)
-        Data.GUI.frame_old_channels.style = Prefix .. "frame_body"
+        Data.GUI.frame_old_channel = {}
+        Data.GUI.frame_old_channel.type = "frame"
+        Data.GUI.frame_old_channel.name = "frame_old_channel"
+        Data.GUI.frame_old_channel.direction = "horizontal"
+        Data.GUI.frame_old_channel = Data.GUI.frame_up.add(Data.GUI.frame_old_channel)
+        Data.GUI.frame_old_channel.style = Prefix .. "frame_body"
 
         --- Barra de movimiento
-        Data.GUI.dropdown_channels = {}
-        Data.GUI.dropdown_channels.type = "drop-down"
-        Data.GUI.dropdown_channels.name = "drop_down_channels"
-        Data.GUI.dropdown_channels = Data.GUI.frame_old_channels.add(Data.GUI.dropdown_channels)
-        Data.GUI.dropdown_channels.style = Prefix .. "drop_down_channels"
+        Data.GUI.dropdown_channel = {}
+        Data.GUI.dropdown_channel.type = "drop-down"
+        Data.GUI.dropdown_channel.name = "drop_down_channel"
+        Data.GUI.dropdown_channel = Data.GUI.frame_old_channel.add(Data.GUI.dropdown_channel)
+        Data.GUI.dropdown_channel.style = Prefix .. "drop_down_channel"
 
         --- Cargar los canales
         for _, channel in pairs(Data.channel) do
-            Data.GUI.dropdown_channels.add_item(channel.name)
+            Data.GUI.dropdown_channel.add_item(channel.name)
         end
-        Data.GUI.dropdown_channels.add_item(This_MOD.new_channel)
+        Data.GUI.dropdown_channel.add_item(This_MOD.new_channel)
 
         --- Botón para aplicar los cambios
         Data.GUI.button_edit = {}
@@ -192,7 +188,7 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.button_edit.name = "button_edit"
         Data.GUI.button_edit.sprite = "utility/rename_icon"
         Data.GUI.button_edit.tooltip = { This_MOD.prefix .. "edit-channel" }
-        Data.GUI.button_edit = Data.GUI.frame_old_channels.add(Data.GUI.button_edit)
+        Data.GUI.button_edit = Data.GUI.frame_old_channel.add(Data.GUI.button_edit)
         Data.GUI.button_edit.style = Prefix .. "button_blue"
 
         --- Botón para aplicar los cambios
@@ -201,13 +197,13 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.button_confirm.name = "button_confirm"
         Data.GUI.button_confirm.sprite = "utility/check_mark_white"
         Data.GUI.button_confirm.tooltip = { "gui.confirm" }
-        Data.GUI.button_confirm = Data.GUI.frame_old_channels.add(Data.GUI.button_confirm)
+        Data.GUI.button_confirm = Data.GUI.frame_old_channel.add(Data.GUI.button_confirm)
         Data.GUI.button_confirm.style = Prefix .. "button_green"
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
     local function destroy()
-        Data.GUI.frame_main.destroy()
+        Data.GUI.frame_up.destroy()
         Data.GPlayer.GUI = {}
         Data.GUI = Data.GPlayer.GUI
     end
@@ -229,16 +225,19 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.Pos = Data.GUI.Pos_start
     end
 
+    --- Validación
+    if not Data.gForces then return end
+
     --- Acción a ejecutar
-    if Data.GUI.frame_main and validate_close() then
+    if validate_close() then
         destroy()
-    elseif not Data.GUI.frame_main and validate_open() then
-        Data.GUI.Action = This_MOD.Action.build
+    elseif validate_open() then
+        Data.GUI.Action = This_MOD.action.build
         build()
         -- Info()
         -- Data.GUI.dropdown_channels.selected_index = Data.GUI.Pos
         -- This_MOD.selection_channel(Data)
-        Data.GUI.Action = This_MOD.Action.none
+        Data.GUI.Action = This_MOD.action.none
     end
 end
 
