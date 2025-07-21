@@ -37,19 +37,25 @@ end
 function This_MOD.setting_mod()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Contenedor
-    This_MOD.new_mame = This_MOD.prefix .. "transceiver"
+    --- Información de referencia
+    This_MOD.ref = {}
+    This_MOD.ref.name = This_MOD.prefix .. "linked-chest"
+    This_MOD.ref.entity = prototypes.entity[This_MOD.ref.name]
+    This_MOD.ref.recipe = prototypes.recipe[This_MOD.ref.name]
+    This_MOD.ref.item = prototypes.item[This_MOD.ref.name]
+
+    --- Valores propios
     This_MOD.channel_default = { This_MOD.prefix .. "default-channel" }
     This_MOD.new_channel = { This_MOD.prefix .. "new-channel" }
 
     --- Posibles estados de la ventana
-    This_MOD.action = {}
-    This_MOD.action.none = nil
-    This_MOD.action.build = 1
-    This_MOD.action.edit = 2
+    This_MOD.Action = {}
+    This_MOD.Action.none = nil
+    This_MOD.Action.build = 1
+    This_MOD.Action.edit = 2
     -- ThisMOD.Action.apply = 3
     -- ThisMOD.Action.discard = 4
-    This_MOD.action.new_channel = 5
+    This_MOD.Action.new_channel = 5
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -59,36 +65,10 @@ function This_MOD.load_events()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     script.on_event({
-        defines.events.on_gui_opened
-    }, function(event)
-
-        GPrefix.var_dump(event)
-
-        local player = game.get_player(event.player_index)
-        local anchor = {
-            gui = defines.relative_gui_type.linked_container_gui,
-            position = defines.relative_gui_position.top
-        }
-        local frame = player.gui.relative.add({
-            type = "frame",
-            name = "main",
-            anchor = anchor
-        })
-        frame.add({
-            type = "label",
-            caption = player.name
-        })
-        storage.algo = storage.algo or {}
-        storage.algo.frame = frame
-    end)
-
-    script.on_event({
+        defines.events.on_gui_opened,
         defines.events.on_gui_closed
     }, function(event)
-        storage.algo = storage.algo or {}
-        if storage.algo.frame then
-            storage.algo.frame.destroy()
-        end
+        This_MOD.toggle_gui(This_MOD.create_data(event))
     end)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -98,27 +78,24 @@ end
 
 --- Crea y agrupar las variables a usar
 function This_MOD.create_data(event)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     --- Consolidar la información
     local Data = GPrefix.create_data(event or {}, This_MOD)
     if not event then return Data end
 
-    --- Entidad en el event
-    if event.entity and event.entity.valid then
-        Data.Entity = event.entity
-    elseif event.created_entity and event.created_entity.valid then
-        Data.Entity = event.created_entity
-    end
-
     --- Lista de los postes
-    Data.gForce.Channel = Data.gForce.Channel or {}
-    Data.Channel = Data.gForce.Channel
+    Data.gForce.channel = Data.gForce.channel or {}
+    Data.channel = Data.gForce.channel
 
-    --- Lista de los transceiver
-    Data.gForce.Node = Data.gForce.Node or {}
-    Data.Node = Data.gForce.Node
+    -- --- Lista de los transceiver
+    -- Data.gForce.node = Data.gForce.node or {}
+    -- Data.node = Data.gForce.node
 
     --- Devolver el consolidado de los datos
     return Data
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -127,11 +104,142 @@ end
 
 
 
+
+---------------------------------------------------------------------------------------------------
+--- Desde acá empieza la parte GUI: Esta sección es para cambiar el canal -------------------------
 ---------------------------------------------------------------------------------------------------
 
----
-function This_MOD.gui_opened(Data)
-    
+--- Crear o destruir el inicador
+function This_MOD.toggle_gui(Data)
+    local function validate_open()
+        --- Validación
+        if not Data.Entity then return false end
+        if not Data.Entity.valid then return false end
+        if Data.Entity.name ~= This_MOD.ref.name then return false end
+
+        --- Canal inexistente
+        if not Data.channel[Data.Entity.link_id] then
+            GPrefix.var_dump(Data.Entity.link_id)
+            -- This_MOD.on_entity_created({
+            --     entity = Data.Node.entity,
+            --     force = Data.Node.entity.force
+            -- })
+        end
+
+        return true
+    end
+    local function validate_close()
+        if Data.GUI.Action == This_MOD.Action.build then return false end
+        -- if not Data.Event.element then return false end
+        -- if Data.Event.element == Data.GUI.frame_main then return true end
+        if not Data.Entity then return false end
+        if not Data.Entity.valid then return false end
+        if Data.Entity.name ~= This_MOD.ref.name then return false end
+        return true
+    end
+
+    local function build()
+        --- Cambiar los guiones del nombre
+        local Prefix = string.gsub(This_MOD.prefix, "%-", "_")
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Crear el cuadro principal
+        Data.GUI.frame_main = {}
+        Data.GUI.frame_main.type = "frame"
+        Data.GUI.frame_main.name = "frame_main"
+        Data.GUI.frame_main.direction = "horizontal"
+        Data.GUI.frame_main.anchor = {}
+        Data.GUI.frame_main.anchor.gui = defines.relative_gui_type.linked_container_gui
+        Data.GUI.frame_main.anchor.position = defines.relative_gui_position.top
+        Data.GUI.frame_main = Data.Player.gui.relative.add(Data.GUI.frame_main)
+        Data.GUI.frame_main.style = "frame"
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Efecto de profundidad
+        Data.GUI.frame_old_channels = {}
+        Data.GUI.frame_old_channels.type = "frame"
+        Data.GUI.frame_old_channels.name = "frame_old_channels"
+        Data.GUI.frame_old_channels.direction = "horizontal"
+        Data.GUI.frame_old_channels = Data.GUI.frame_main.add(Data.GUI.frame_old_channels)
+        Data.GUI.frame_old_channels.style = Prefix .. "frame_body"
+
+        --- Barra de movimiento
+        Data.GUI.dropdown_channels = {}
+        Data.GUI.dropdown_channels.type = "drop-down"
+        Data.GUI.dropdown_channels.name = "drop_down_channels"
+        Data.GUI.dropdown_channels = Data.GUI.frame_old_channels.add(Data.GUI.dropdown_channels)
+        Data.GUI.dropdown_channels.style = Prefix .. "drop_down_channels"
+
+        --- Cargar los canales
+        for _, channel in pairs(Data.channel) do
+            Data.GUI.dropdown_channels.add_item(channel.name)
+        end
+        Data.GUI.dropdown_channels.add_item(This_MOD.new_channel)
+
+        --- Botón para aplicar los cambios
+        Data.GUI.button_edit = {}
+        Data.GUI.button_edit.type = "sprite-button"
+        Data.GUI.button_edit.name = "button_edit"
+        Data.GUI.button_edit.sprite = "utility/rename_icon"
+        Data.GUI.button_edit.tooltip = { This_MOD.prefix .. "edit-channel" }
+        Data.GUI.button_edit = Data.GUI.frame_old_channels.add(Data.GUI.button_edit)
+        Data.GUI.button_edit.style = Prefix .. "button_blue"
+
+        --- Botón para aplicar los cambios
+        Data.GUI.button_confirm = {}
+        Data.GUI.button_confirm.type = "sprite-button"
+        Data.GUI.button_confirm.name = "button_confirm"
+        Data.GUI.button_confirm.sprite = "utility/check_mark_white"
+        Data.GUI.button_confirm.tooltip = { "gui.confirm" }
+        Data.GUI.button_confirm = Data.GUI.frame_old_channels.add(Data.GUI.button_confirm)
+        Data.GUI.button_confirm.style = Prefix .. "button_green"
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    end
+    local function destroy()
+        Data.GUI.frame_main.destroy()
+        Data.GPlayer.GUI = {}
+        Data.GUI = Data.GPlayer.GUI
+    end
+
+    local function Info()
+        --- Valores de la entidad
+        Data.GUI.Node = Data.Node[Data.Entity.unit_number]
+
+        --- Selección inicial
+        Data.GUI.Pos_start = 0
+        for index, _ in pairs(Data.channel) do
+            Data.GUI.Pos_start = Data.GUI.Pos_start + 1
+            if index == Data.GUI.Node.channel.index then
+                break
+            end
+        end
+
+        --- Selección actual
+        Data.GUI.Pos = Data.GUI.Pos_start
+    end
+
+    --- Acción a ejecutar
+    if Data.GUI.frame_main and validate_close() then
+        destroy()
+    elseif not Data.GUI.frame_main and validate_open() then
+        Data.GUI.Action = This_MOD.Action.build
+        build()
+        -- Info()
+        -- Data.GUI.dropdown_channels.selected_index = Data.GUI.Pos
+        -- This_MOD.selection_channel(Data)
+        Data.GUI.Action = This_MOD.Action.none
+    end
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -146,3 +254,27 @@ end
 This_MOD.start()
 
 ---------------------------------------------------------------------------------------------------
+
+
+--[[ Código base
+    if true then return end
+
+    GPrefix.var_dump(event)
+
+    local player = game.get_player(event.player_index)
+    local anchor = {
+        gui = defines.relative_gui_type.linked_container_gui,
+        position = defines.relative_gui_position.top
+    }
+    local frame = player.gui.relative.add({
+        type = "frame",
+        name = "main",
+        anchor = anchor
+    })
+    frame.add({
+        type = "label",
+        caption = player.name
+    })
+    storage.algo = storage.algo or {}
+    storage.algo.frame = frame
+]]
