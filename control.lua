@@ -66,6 +66,13 @@ function This_MOD.load_events()
         This_MOD.toggle_gui(This_MOD.create_data(event))
     end)
 
+    --- Al seleccionar otro canal
+    script.on_event({
+        defines.events.on_gui_selection_state_changed
+    }, function(event)
+        This_MOD.selection_channel(This_MOD.create_data(event))
+    end)
+
     --- Verificar que la entidad tenga energía
     script.on_nth_tick(10, This_MOD.check_channel)
 
@@ -361,13 +368,13 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.button_cancel.style = Prefix .. "button_red"
 
         --- Botón para aplicar los cambios
-        Data.GUI.button_green = {}
-        Data.GUI.button_green.type = "sprite-button"
-        Data.GUI.button_green.name = "button_green"
-        Data.GUI.button_green.sprite = "utility/check_mark_white"
-        Data.GUI.button_green.tooltip = { "gui.confirm" }
-        Data.GUI.button_green = Data.GUI.frame_new_channel.add(Data.GUI.button_green)
-        Data.GUI.button_green.style = Prefix .. "button_green"
+        Data.GUI.button_confirm = {}
+        Data.GUI.button_confirm.type = "sprite-button"
+        Data.GUI.button_confirm.name = "button_green"
+        Data.GUI.button_confirm.sprite = "utility/check_mark_white"
+        Data.GUI.button_confirm.tooltip = { "gui.confirm" }
+        Data.GUI.button_confirm = Data.GUI.frame_new_channel.add(Data.GUI.button_confirm)
+        Data.GUI.button_confirm.style = Prefix .. "button_green"
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
@@ -420,6 +427,35 @@ function This_MOD.check_channel()
             end
         end
     end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+--- Al seleccionar un canal
+function This_MOD.selection_channel(Data)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Validación
+    if not Data.GUI.frame_up then return end
+    local Element = Data.Event.element
+    local Channels = Data.GUI.dropdown_channel
+    if Element and Element ~= Channels then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Selección actul
+    local Selected_index = Channels.selected_index
+
+    --- Se quiere crear un nuevo canal
+    if Selected_index == #Channels.items then
+        Data.GUI.frame_new_channel.visible = true
+        Data.GUI.frame_old_channel.visible = false
+        Data.GUI.textfield_new_channel.focus()
+        return
+    end
+
+    --- Cambiar el canal del cofre
+    Data.GUI.Entity.link_id = This_MOD.get_link_id_of_index(Data)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
