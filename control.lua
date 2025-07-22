@@ -46,9 +46,8 @@ function This_MOD.setting_mod()
     --- Posibles estados de la ventana
     This_MOD.action = {}
     This_MOD.action.none = nil
-    This_MOD.action.build = 1
-    This_MOD.action.edit = 2
-    This_MOD.action.new_channel = 3
+    This_MOD.action.edit = 1
+    This_MOD.action.new_channel = 2
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -155,12 +154,12 @@ function This_MOD.get_link_id_of_index(Data)
 
     --- Variables a usar
     local Index = 0
-    local Dropdown_index = Data.GUI.dropdown_channel.selected_index
+    local Channel_index = Data.GUI.dropdown_channel.selected_index
 
     --- Buscar el index
     for key, _ in pairs(Data.channel) do
         Index = Index + 1
-        if Index == Dropdown_index then
+        if Index == Channel_index then
             return tonumber(key)
         end
     end
@@ -426,9 +425,9 @@ function This_MOD.check_channel()
             })
 
             --- Validar cambio
-            local Dropdown_index = Data.GUI.dropdown_channel.selected_index
+            local Channel_index = Data.GUI.dropdown_channel.selected_index
             local Chest_index = This_MOD.get_index_of_link_id(Data)
-            if not Chest_index or Dropdown_index ~= Chest_index then
+            if not Chest_index or Channel_index ~= Chest_index then
                 This_MOD.toggle_gui(Data) --- Destruir
                 This_MOD.toggle_gui(Data) --- Construir
             end
@@ -455,9 +454,8 @@ function This_MOD.selection_channel(Data)
 
     --- Se quiere crear un nuevo canal
     if Selected_index == #Channels.items then
-        Data.GUI.frame_new_channel.visible = true
-        Data.GUI.frame_old_channel.visible = false
-        Data.GUI.textfield_new_channel.focus()
+        Data.GUI.Action = This_MOD.Action.new_channel
+        This_MOD.show_new_channel(Data)
         return
     end
 
@@ -494,7 +492,7 @@ function This_MOD.button_action(Data)
     -- --- Cancelar el cambio de nombre o el nuevo canal
     -- Flag = Data.Event.element == Data.GUI.button_cancel
     -- if Flag then
-    --     Data.Event.element = Data.GUI.dropdown_channels
+    --     Data.Event.element = Data.GUI.dropdown_channel
     --     This_MOD.show_old_channel(Data)
     --     return
     -- end
@@ -508,13 +506,13 @@ function This_MOD.button_action(Data)
     --     return
     -- end
 
-    -- --- Editar el nombre del canal seleccionado
-    -- Flag = Data.Event.element == Data.GUI.button_edit
-    -- if Flag then
-    --     Data.GUI.Action = This_MOD.Action.edit
-    --     This_MOD.show_new_channel(Data)
-    --     return
-    -- end
+    --- Editar el nombre del canal seleccionado
+    Flag = Data.Event.element == Data.GUI.button_edit
+    if Flag then
+        Data.GUI.Action = This_MOD.Action.edit
+        This_MOD.show_new_channel(Data)
+        return
+    end
 
     -- --- Cambiar el canal
     -- Flag = Data.Event.element == Data.GUI.button_confirm
@@ -525,6 +523,35 @@ function This_MOD.button_action(Data)
     --     Data.Player.play_sound({ path = "entity-open/constant-combinator" })
     --     return
     -- end
+end
+
+---------------------------------------------------------------------------------------------------
+
+--- Mostrar el cuerpo para crear un nuevo canal
+function This_MOD.show_new_channel(Data)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Cambiar de frame
+    Data.GUI.frame_old_channel.visible = false
+    Data.GUI.frame_new_channel.visible = true
+
+    --- Configuración para un nuevo canal
+    if Data.GUI.Action == This_MOD.Action.new_channel then
+        Data.GUI.Action = This_MOD.Action.new_channel
+        Data.GUI.textfield_new_channel.text = ""
+    end
+
+    --- Configuración para un nuevo nombre
+    if Data.GUI.Action == This_MOD.Action.edit then
+        local Channels = Data.GUI.dropdown_channel
+        local Text = Data.GUI.textfield_new_channel
+        Text.text = Channels.get_item(Channels.selected_index)
+    end
+
+    --- Enfocar nombre
+    Data.GUI.textfield_new_channel.focus()
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 ---------------------------------------------------------------------------------------------------
