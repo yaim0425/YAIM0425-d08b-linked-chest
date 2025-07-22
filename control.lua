@@ -76,7 +76,7 @@ function This_MOD.load_events()
     script.on_event({
         defines.events.on_gui_click
     }, function(event)
-        This_MOD.button_action(This_MOD.Create_data(event))
+        This_MOD.button_action(This_MOD.create_data(event))
     end)
 
     --- Verificar que la entidad tenga energía
@@ -467,6 +467,8 @@ end
 
 --- Acciones de los botones
 function This_MOD.button_action(Data)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     --- Variables a usar
     local Flag = false
     local EventID = 0
@@ -523,6 +525,8 @@ function This_MOD.button_action(Data)
     --     Data.Player.play_sound({ path = "entity-open/constant-combinator" })
     --     return
     -- end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 ---------------------------------------------------------------------------------------------------
