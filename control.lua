@@ -67,7 +67,7 @@ function This_MOD.load_events()
     end)
 
     --- Verificar que la entidad tenga energía
-    script.on_nth_tick(30, This_MOD.check_channel)
+    script.on_nth_tick(10, This_MOD.check_channel)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
