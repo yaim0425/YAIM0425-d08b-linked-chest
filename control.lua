@@ -277,7 +277,7 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.frame_up = {}
         Data.GUI.frame_up.type = "frame"
         Data.GUI.frame_up.name = "frame_up"
-        Data.GUI.frame_up.direction = "horizontal"
+        Data.GUI.frame_up.direction = "vertical"
         Data.GUI.frame_up.anchor = {}
         Data.GUI.frame_up.anchor.gui = defines.relative_gui_type.linked_container_gui
         Data.GUI.frame_up.anchor.position = defines.relative_gui_position.top
@@ -318,6 +318,56 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.button_edit.tooltip = { This_MOD.prefix .. "edit-channel" }
         Data.GUI.button_edit = Data.GUI.frame_old_channel.add(Data.GUI.button_edit)
         Data.GUI.button_edit.style = Prefix .. "button_blue"
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        --- Efecto de profundidad
+        Data.GUI.frame_new_channel = {}
+        Data.GUI.frame_new_channel.type = "frame"
+        Data.GUI.frame_new_channel.name = "frame_new_channels"
+        Data.GUI.frame_new_channel.direction = "horizontal"
+        Data.GUI.frame_new_channel = Data.GUI.frame_up.add(Data.GUI.frame_new_channel)
+        Data.GUI.frame_new_channel.style = Prefix .. "frame_body"
+        Data.GUI.frame_new_channel.visible = false
+
+        --- Nuevo nombre
+        Data.GUI.textfield_new_channel = {}
+        Data.GUI.textfield_new_channel.type = "textfield"
+        Data.GUI.textfield_new_channel.name = "write-channel"
+        Data.GUI.textfield_new_channel.text = "xXx"
+        Data.GUI.textfield_new_channel = Data.GUI.frame_new_channel.add(Data.GUI.textfield_new_channel)
+        Data.GUI.textfield_new_channel.style = Prefix .. "stretchable_textfield"
+
+        --- Crear la imagen de selección
+        Data.GUI.button_icon = {}
+        Data.GUI.button_icon.type = "choose-elem-button"
+        Data.GUI.button_icon.name = "button_icon"
+        Data.GUI.button_icon.elem_type = "signal"
+        Data.GUI.button_icon.signal = { type = "virtual", name = GPrefix.name .. "-icon" }
+        Data.GUI.button_icon = Data.GUI.frame_new_channel.add(Data.GUI.button_icon)
+        Data.GUI.button_icon.style = Prefix .. "button"
+
+        --- Botón para cancelar los cambios
+        Data.GUI.button_cancel = {}
+        Data.GUI.button_cancel.type = "sprite-button"
+        Data.GUI.button_cancel.name = "button_cancel"
+        Data.GUI.button_cancel.sprite = "utility/close_fat"
+        Data.GUI.button_cancel.tooltip = { "gui-mod-settings.cancel" }
+        Data.GUI.button_cancel = Data.GUI.frame_new_channel.add(Data.GUI.button_cancel)
+        Data.GUI.button_cancel.style = Prefix .. "button_red"
+
+        --- Botón para aplicar los cambios
+        Data.GUI.button_green = {}
+        Data.GUI.button_green.type = "sprite-button"
+        Data.GUI.button_green.name = "button_green"
+        Data.GUI.button_green.sprite = "utility/check_mark_white"
+        Data.GUI.button_green.tooltip = { "gui.confirm" }
+        Data.GUI.button_green = Data.GUI.frame_new_channel.add(Data.GUI.button_green)
+        Data.GUI.button_green.style = Prefix .. "button_green"
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
     end

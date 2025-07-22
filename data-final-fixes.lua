@@ -288,7 +288,7 @@ function This_MOD.styles()
     }
     Styles[Prefix .. "drop_down_channel"] = {
         type = "dropdown_style",
-        width = 250 + 32
+        width = 282 + 32
     }
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -338,6 +338,7 @@ function This_MOD.icon()
     GPrefix.extend({
         type = "virtual-signal",
         name = Name,
+        localised_name = "",
         icon = This_MOD.graphics .. "icon.png",
         icon_size = 40,
         subgroup = "virtual-signal",
