@@ -242,7 +242,6 @@ function This_MOD.toggle_gui(Data)
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         if not Data.GUI.frame_up then return false end
-        if Data.GUI.Action == This_MOD.action.build then return false end
         if not Data.Entity then return false end
         if not Data.Entity.valid then return false end
         if Data.Entity.name ~= This_MOD.ref.name then return false end
@@ -309,6 +308,7 @@ function This_MOD.toggle_gui(Data)
         for _, channel in pairs(Data.channel) do
             Data.GUI.dropdown_channel.add_item(channel)
         end
+        Data.GUI.dropdown_channel.add_item(This_MOD.new_channel)
 
         --- Botón para aplicar los cambios
         Data.GUI.button_edit = {}
@@ -387,11 +387,9 @@ function This_MOD.toggle_gui(Data)
     if validate_close() then
         destroy()
     elseif validate_open() then
-        Data.GUI.Action = This_MOD.action.build
         build()
         Data.GUI.Entity = Data.Entity
         Data.GUI.dropdown_channel.selected_index = This_MOD.get_index_of_link_id(Data)
-        Data.GUI.Action = This_MOD.action.none
     end
 end
 
