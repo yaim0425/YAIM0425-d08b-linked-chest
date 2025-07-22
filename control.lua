@@ -41,7 +41,6 @@ function This_MOD.setting_mod()
     This_MOD.ref.item = prototypes.item[This_MOD.ref.name]
 
     --- Valores propios
-    This_MOD.channel_default = { This_MOD.prefix .. "default-channel" }
     This_MOD.new_channel = { This_MOD.prefix .. "new-channel" }
 
     --- Posibles estados de la ventana
@@ -351,12 +350,12 @@ function This_MOD.check_channel()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Cargar toda la información
-    local All = This_MOD.create_data()
+    local Datas = This_MOD.create_data()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Recorrer cada jugador enlistado
-    for player_index, GPlayer in pairs(All.GPlayers) do
+    for player_index, GPlayer in pairs(Datas.GPlayers) do
         if GPlayer.GUI.Entity then
             --- Consolidar información
             local Data = This_MOD.create_data({
