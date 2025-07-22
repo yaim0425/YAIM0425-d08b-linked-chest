@@ -80,7 +80,7 @@ function This_MOD.load_events()
     end)
 
     --- Verificar que la entidad tenga energía
-    script.on_nth_tick(10, This_MOD.check_channel)
+    script.on_nth_tick(60, This_MOD.check_channel)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -401,7 +401,7 @@ function This_MOD.toggle_gui(Data)
         destroy()
     elseif validate_open() then
         build()
-        Data.GUI.Entity = Data.Entity
+        Data.GUI.entity = Data.Entity
         Data.GUI.dropdown_channel.selected_index = This_MOD.get_index_of_link_id(Data)
     end
 end
@@ -417,20 +417,28 @@ function This_MOD.check_channel()
 
     --- Recorrer cada jugador enlistado
     for player_index, GPlayer in pairs(Datas.GPlayers) do
-        if GPlayer.GUI.Entity then
+        if GPlayer.GUI.entity then
             --- Consolidar información
             local Data = This_MOD.create_data({
-                entity = GPlayer.GUI.Entity,
+                entity = GPlayer.GUI.entity,
                 player_index = player_index
             })
 
-            --- Validar cambio
-            local Channel_index = Data.GUI.dropdown_channel.selected_index
-            local Chest_index = This_MOD.get_index_of_link_id(Data)
-            if not Chest_index or Channel_index ~= Chest_index then
+            repeat
+                --- No está mostrando el canal
+                if Data.GUI.action then break end
+
+                --- Valores a evaluar
+                local Channel_index = Data.GUI.dropdown_channel.selected_index
+                local Chest_index = This_MOD.get_index_of_link_id(Data)
+
+                --- Validar cambio
+                if Channel_index == Chest_index then break end
+
+                --- Actualizar el indicador
                 This_MOD.toggle_gui(Data) --- Destruir
                 This_MOD.toggle_gui(Data) --- Construir
-            end
+            until true
         end
     end
 
@@ -454,13 +462,13 @@ function This_MOD.selection_channel(Data)
 
     --- Se quiere crear un nuevo canal
     if Selected_index == #Channels.items then
-        Data.GUI.Action = This_MOD.action.new_channel
+        Data.GUI.action = This_MOD.action.new_channel
         This_MOD.show_new_channel(Data)
         return
     end
 
     --- Cambiar el canal del cofre
-    Data.GUI.Entity.link_id = This_MOD.get_link_id_of_index(Data)
+    Data.GUI.entity.link_id = This_MOD.get_link_id_of_index(Data)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -500,8 +508,8 @@ function This_MOD.button_action(Data)
     -- end
 
     -- --- Cambiar el nombre de un canal o agregar un nuevo canal
-    -- Flag = false or Data.GUI.Action == This_MOD.Action.edit
-    -- Flag = Flag or Data.GUI.Action == This_MOD.Action.new_channel
+    -- Flag = false or Data.GUI.action == This_MOD.Action.edit
+    -- Flag = Flag or Data.GUI.action == This_MOD.Action.new_channel
     -- Flag = Flag and Data.Event.element == Data.GUI.button_green
     -- if Flag then
     --     This_MOD.validate_channel_name(Data)
@@ -511,7 +519,7 @@ function This_MOD.button_action(Data)
     --- Editar el nombre del canal seleccionado
     Flag = Data.Event.element == Data.GUI.button_edit
     if Flag then
-        Data.GUI.Action = This_MOD.action.edit
+        Data.GUI.action = This_MOD.action.edit
         This_MOD.show_new_channel(Data)
         return
     end
@@ -540,13 +548,13 @@ function This_MOD.show_new_channel(Data)
     Data.GUI.frame_new_channel.visible = true
 
     --- Configuración para un nuevo canal
-    if Data.GUI.Action == This_MOD.action.new_channel then
-        Data.GUI.Action = This_MOD.action.new_channel
+    if Data.GUI.action == This_MOD.action.new_channel then
+        Data.GUI.action = This_MOD.action.new_channel
         Data.GUI.textfield_new_channel.text = ""
     end
 
     --- Configuración para un nuevo nombre
-    if Data.GUI.Action == This_MOD.action.edit then
+    if Data.GUI.action == This_MOD.action.edit then
         local Channels = Data.GUI.dropdown_channel
         local Text = Data.GUI.textfield_new_channel
         Text.text = Channels.get_item(Channels.selected_index)
