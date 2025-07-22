@@ -80,7 +80,7 @@ function This_MOD.load_events()
     end)
 
     --- Verificar que la entidad tenga energía
-    script.on_nth_tick(60, This_MOD.check_channel)
+    script.on_nth_tick(20, This_MOD.check_channel)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -499,13 +499,14 @@ function This_MOD.button_action(Data)
     --     return
     -- end
 
-    -- --- Cancelar el cambio de nombre o el nuevo canal
-    -- Flag = Data.Event.element == Data.GUI.button_cancel
-    -- if Flag then
-    --     Data.Event.element = Data.GUI.dropdown_channel
-    --     This_MOD.show_old_channel(Data)
-    --     return
-    -- end
+    --- Cancelar el cambio de nombre o el nuevo canal
+    Flag = Data.Event.element == Data.GUI.button_cancel
+    if Flag then
+        Data.Entity = Data.GUI.entity
+        This_MOD.toggle_gui(Data) --- Destruir
+        This_MOD.toggle_gui(Data) --- Construir
+        return
+    end
 
     -- --- Cambiar el nombre de un canal o agregar un nuevo canal
     -- Flag = false or Data.GUI.action == This_MOD.Action.edit
