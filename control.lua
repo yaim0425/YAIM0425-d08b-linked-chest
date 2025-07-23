@@ -86,6 +86,13 @@ function This_MOD.load_events()
         This_MOD.validate_channel_name(This_MOD.Create_data(event))
     end)
 
+    --- Al seleccionar o deseleccionar un icon
+    script.on_event({
+        defines.events.on_gui_elem_changed
+    }, function(event)
+        This_MOD.add_icon(This_MOD.create_data(event))
+    end)
+
     --- Verificar que la entidad tenga energía
     script.on_nth_tick(20, This_MOD.check_channel)
 
@@ -148,7 +155,61 @@ end
 ---------------------------------------------------------------------------------------------------
 
 --- Seleccionar un nuevo objeto
-function This_MOD.add_icon()
+function This_MOD.add_icon(Data)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Validación
+    if not Data.Event.element then return end
+    if not Data.GUI.button_icon then return end
+    if Data.Event.element ~= Data.GUI.button_icon then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Cargar la selección
+    local Select = Data.GUI.button_icon.elem_value
+
+    --- Restaurar el icono
+    Data.GUI.button_icon.elem_value = {
+        type = "virtual",
+        name = GPrefix.name .. "-icon"
+    }
+
+    --- Se intentó limpiar el icono
+    if not Select then return end
+
+    --- Convertir seleccion en texto
+    local function signal_to_rich_text(select)
+        local type = ""
+
+        if not select.type then
+            if prototypes.entity[select.name] then
+                type = "entity"
+            elseif prototypes.recipe[select.name] then
+                type = "recipe"
+            elseif prototypes.fluid[select.name] then
+                type = "fluid"
+            elseif prototypes.item[select.name] then
+                type = "item"
+            end
+        end
+
+        if select.type then
+            type = select.type
+            if select.type == "virtual" then
+                type = type .. "-signal"
+            end
+        end
+
+        return "[img=" .. type .. "." .. select.name .. "]"
+    end
+
+    --- Agregar la imagen seleccionada
+    local text = Data.GUI.textfield_new_channel.text
+    text = text .. signal_to_rich_text(Select)
+    Data.GUI.textfield_new_channel.text = text
+    Data.GUI.textfield_new_channel.focus()
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 --- Validar el nombre del canal
