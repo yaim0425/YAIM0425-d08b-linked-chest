@@ -145,7 +145,82 @@ function This_MOD.add_icon()
 end
 
 --- Validar el nombre del canal
-function This_MOD.validate_channel_name()
+function This_MOD.validate_channel_name(Data)
+    --- Texto a evaluar
+    local Text = Data.GUI.textfield_new_channel
+
+    --- Nombre invalido
+    if Text.text == "" then
+        Data.Player.play_sound({ path = "utility/cannot_build" })
+        Text.focus()
+        return
+    end
+
+    --- Nombre ocupado
+    if GPrefix.get_key(Data.channel, Text.text) then
+        Data.Player.play_sound({ path = "utility/cannot_build" })
+        Text.focus()
+        return
+    end
+
+    --- Crear un nuevo canal
+    if Data.GUI.action == This_MOD.action.new_channel then
+        Data.gForce.last_index = Data.gForce.last_index or 0
+        for i = Data.gForce.last_index, 2 ^ 32 - 1, 1 do
+            local Index = GPrefix.pad_left_zeros(10, i)
+            if not Data.channel[Index] then
+                Data.channel[Index] = Text.text
+                Data.gForce.last_index = i
+                Data.GUI.entity.link_id = i
+                break
+            end
+        end
+    end
+
+    --- Cambiar el nombre de un canal
+    if Data.GUI.action == This_MOD.action.edit then
+        Data.channel[Data.GUI.selected_index] = Text.text
+    end
+
+    --- Actualizar el indicador
+    Data.Entity = Data.GUI.entity
+    This_MOD.toggle_gui(Data) --- Destruir
+    This_MOD.toggle_gui(Data) --- Construir
+    Data.Player.play_sound({ path = "utility/wire_connect_pole" })
+
+    if true then return end
+
+
+
+
+    --- Crear un nuevo canal
+    if Data.GUI.action == This_MOD.action.new_channel then
+        --- Crear el nuevo canal
+        Data.GUI.Pos = GPrefix.get_length(Data.channel) + 1
+        Data.Event.element = Data.GUI.dropdown_channels
+        This_MOD.get_channel(Data, Text.text)
+
+        --- Agregar el nuevo canal
+        Data.GUI.dropdown_channels.add_item(Text.text, Data.GUI.Pos)
+    end
+
+    --- Cambiar el nombre de un canal
+    if Data.GUI.action == This_MOD.action.edit then
+        --- Buscar el canal
+        local Channel = This_MOD.get_channel_pos(Data)
+
+        --- Actualizar el nombre
+        Channel.name = Text.text
+        Data.GUI.dropdown_channels.set_item(Data.GUI.Pos, Text.text)
+    end
+
+    --- Cambiar el canal
+    This_MOD.set_channel(Data.GUI.Node, This_MOD.get_channel_pos(Data))
+
+    --- Cerrar la ventana
+    Data.Event.element = Data.GUI.button_exit
+    This_MOD.Toggle_window(Data)
+    Data.Player.play_sound({ path = "utility-sounds/wire_connect_pole" })
 end
 
 --- Obtener el canal seleccionado
@@ -508,14 +583,14 @@ function This_MOD.button_action(Data)
         return
     end
 
-    -- --- Cambiar el nombre de un canal o agregar un nuevo canal
-    -- Flag = false or Data.GUI.action == This_MOD.Action.edit
-    -- Flag = Flag or Data.GUI.action == This_MOD.Action.new_channel
-    -- Flag = Flag and Data.Event.element == Data.GUI.button_green
-    -- if Flag then
-    --     This_MOD.validate_channel_name(Data)
-    --     return
-    -- end
+    --- Cambiar el nombre de un canal o agregar un nuevo canal
+    Flag = false or Data.GUI.action == This_MOD.action.edit
+    Flag = Flag or Data.GUI.action == This_MOD.action.new_channel
+    Flag = Flag and Data.Event.element == Data.GUI.button_confirm
+    if Flag then
+        This_MOD.validate_channel_name(Data)
+        return
+    end
 
     --- Editar el nombre del canal seleccionado
     Flag = Data.Event.element == Data.GUI.button_edit
@@ -554,11 +629,12 @@ function This_MOD.show_new_channel(Data)
         Data.GUI.textfield_new_channel.text = ""
     end
 
-    --- Configuración para un nuevo nombre
+    --- Configuración para editar el nombre
     if Data.GUI.action == This_MOD.action.edit then
         local Channels = Data.GUI.dropdown_channel
         local Text = Data.GUI.textfield_new_channel
         Text.text = Channels.get_item(Channels.selected_index)
+        Data.GUI.selected_index = GPrefix.get_key(Data.channel, Text.text)
     end
 
     --- Enfocar nombre
