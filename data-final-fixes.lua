@@ -31,8 +31,9 @@ function This_MOD.start()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Estilos a usar
-    This_MOD.styles()
-    This_MOD.icon()
+    This_MOD.load_styles()
+    This_MOD.load_sound()
+    This_MOD.loda_icon()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -56,6 +57,7 @@ function This_MOD.setting_mod()
 
     --- Valores constante
     This_MOD.graphics = "__" .. This_MOD.prefix .. This_MOD.name .. "__/graphics/"
+    This_MOD.sound = "__" .. This_MOD.prefix .. This_MOD.name .. "__/sound/"
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -228,7 +230,7 @@ end
 ---------------------------------------------------------------------------------------------------
 
 --- Estilos a usar
-function This_MOD.styles()
+function This_MOD.load_styles()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Cambiar los guiones del nombre
@@ -274,6 +276,7 @@ function This_MOD.styles()
     Styles[Prefix .. "button_green"] = {
         type = "button_style",
         parent = "tool_button_green",
+        left_click_sound = This_MOD.sound .. "empty_audio.ogg",
         padding = 0,
         margin = 0,
         size = 28
@@ -301,7 +304,7 @@ function This_MOD.styles()
 end
 
 --- Icono para las imagenes
-function This_MOD.icon()
+function This_MOD.loda_icon()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Validación
@@ -319,6 +322,20 @@ function This_MOD.icon()
         icon_size = 40,
         subgroup = "virtual-signal",
         order = "z-z-o"
+    })
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+--- Cargar el sonido
+function This_MOD.load_sound()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    GPrefix.extend({
+        type = "sound",
+        name = "gui_tool_button",
+        filename = "__core__/sound/gui-tool-button.ogg",
+        volume = 1.0
     })
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
