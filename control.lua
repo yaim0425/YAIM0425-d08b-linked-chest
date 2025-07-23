@@ -151,6 +151,8 @@ function This_MOD.validate_channel_name(Data)
     --- Texto a evaluar
     local Text = Data.GUI.textfield_new_channel
 
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     --- Validación
     if Text.text == "" or GPrefix.get_key(Data.channel, Text.text) then
         Data.Player.play_sound({ path = "utility/cannot_build" })
