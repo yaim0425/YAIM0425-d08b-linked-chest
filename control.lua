@@ -79,6 +79,13 @@ function This_MOD.load_events()
         This_MOD.button_action(This_MOD.create_data(event))
     end)
 
+    --- Al presionar ENTER
+    script.on_event({
+        defines.events.on_gui_confirmed
+    }, function(event)
+        This_MOD.validate_channel_name(This_MOD.Create_data(event))
+    end)
+
     --- Verificar que la entidad tenga energía
     script.on_nth_tick(20, This_MOD.check_channel)
 
