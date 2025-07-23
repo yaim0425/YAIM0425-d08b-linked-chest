@@ -125,182 +125,7 @@ end
 
 
 ---------------------------------------------------------------------------------------------------
-
---- Obtener un canal
-function This_MOD.get_channel(Data, channel)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Cargar el poste del canal indicado
-    local Found = GPrefix.get_key(Data.channel, channel)
-    if Found then return channel end
-
-    --- Formato al indice
-    local Link_id = Data.Entity.link_id
-    Link_id = GPrefix.pad_left_zeros(10, Link_id)
-    if Data.channel[Link_id] then return end
-
-    --- Guardar el nuevo canal
-    Data.channel[Link_id] = channel
-
-    --- Devolver el canal indicado
-    return channel
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
----------------------------------------------------------------------------------------------------
-
---- Seleccionar un nuevo objeto
-function This_MOD.add_icon(Data)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Validación
-    if not Data.Event.element then return end
-    if not Data.GUI.button_icon then return end
-    if Data.Event.element ~= Data.GUI.button_icon then return end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Cargar la selección
-    local Select = Data.GUI.button_icon.elem_value
-
-    --- Restaurar el icono
-    Data.GUI.button_icon.elem_value = {
-        type = "virtual",
-        name = GPrefix.name .. "-icon"
-    }
-
-    --- Se intentó limpiar el icono
-    if not Select then return end
-
-    --- Convertir seleccion en texto
-    local function signal_to_rich_text(select)
-        local type = ""
-
-        if not select.type then
-            if prototypes.entity[select.name] then
-                type = "entity"
-            elseif prototypes.recipe[select.name] then
-                type = "recipe"
-            elseif prototypes.fluid[select.name] then
-                type = "fluid"
-            elseif prototypes.item[select.name] then
-                type = "item"
-            end
-        end
-
-        if select.type then
-            type = select.type
-            if select.type == "virtual" then
-                type = type .. "-signal"
-            end
-        end
-
-        return "[img=" .. type .. "." .. select.name .. "]"
-    end
-
-    --- Agregar la imagen seleccionada
-    local text = Data.GUI.textfield_new_channel.text
-    text = text .. signal_to_rich_text(Select)
-    Data.GUI.textfield_new_channel.text = text
-    Data.GUI.textfield_new_channel.focus()
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
---- Validar el nombre del canal
-function This_MOD.validate_channel_name(Data)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Texto a evaluar
-    local Text = Data.GUI.textfield_new_channel
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Validación
-    if Text.text == "" or GPrefix.get_key(Data.channel, Text.text) then
-        Data.Player.play_sound({ path = "utility/cannot_build" })
-        Text.focus()
-        return
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Crear un nuevo canal
-    if Data.GUI.action == This_MOD.action.new_channel then
-        Data.gForce.last_index = Data.gForce.last_index or 0
-        for i = Data.gForce.last_index, 2 ^ 32 - 1, 1 do
-            local Index = GPrefix.pad_left_zeros(10, i)
-            if not Data.channel[Index] then
-                Data.channel[Index] = Text.text
-                Data.gForce.last_index = i
-                Data.GUI.entity.link_id = i
-                break
-            end
-        end
-    end
-
-    --- Cambiar el nombre de un canal
-    if Data.GUI.action == This_MOD.action.edit then
-        Data.channel[Data.GUI.selected_index] = Text.text
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Actualizar el indicador
-    Data.Entity = Data.GUI.entity
-    This_MOD.toggle_gui(Data) --- Destruir
-    This_MOD.toggle_gui(Data) --- Construir
-    Data.Player.play_sound({ path = "utility/wire_connect_pole" })
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
---- Obtener el canal seleccionado
-function This_MOD.get_link_id_of_index(Data)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Variables a usar
-    local Index = 0
-    local Channel_index = Data.GUI.dropdown_channel.selected_index
-
-    --- Buscar el index
-    for key, _ in pairs(Data.channel) do
-        Index = Index + 1
-        if Index == Channel_index then
-            return tonumber(key)
-        end
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
---- Obtener el canal seleccionado
-function This_MOD.get_index_of_link_id(Data)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Variables a usar
-    local Index = 0
-    local Key = Data.Entity.link_id
-    Key = GPrefix.pad_left_zeros(10, Key)
-
-    --- Buscar el index
-    for key, _ in pairs(Data.channel) do
-        Index = Index + 1
-        if key == Key then
-            return Index
-        end
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
----------------------------------------------------------------------------------------------------
-
-
-
-
-
+---> Acciones en el GUI
 ---------------------------------------------------------------------------------------------------
 
 --- Crear o destruir el indicador
@@ -514,45 +339,6 @@ function This_MOD.toggle_gui(Data)
     end
 end
 
---- Verificar el cambio de cada canal
-function This_MOD.check_channel()
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Cargar toda la información
-    local Datas = This_MOD.create_data()
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Recorrer cada jugador enlistado
-    for player_index, GPlayer in pairs(Datas.GPlayers) do
-        if GPlayer.GUI.entity then
-            --- Consolidar información
-            local Data = This_MOD.create_data({
-                entity = GPlayer.GUI.entity,
-                player_index = player_index
-            })
-
-            repeat
-                --- No está mostrando el canal
-                if Data.GUI.action then break end
-
-                --- Valores a evaluar
-                local Channel_index = Data.GUI.dropdown_channel.selected_index
-                local Chest_index = This_MOD.get_index_of_link_id(Data)
-
-                --- Validar cambio
-                if Channel_index == Chest_index then break end
-
-                --- Actualizar el indicador
-                This_MOD.toggle_gui(Data) --- Destruir
-                This_MOD.toggle_gui(Data) --- Construir
-            until true
-        end
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
 --- Al seleccionar un canal
 function This_MOD.selection_channel(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -629,7 +415,113 @@ function This_MOD.button_action(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
+--- Seleccionar un nuevo objeto
+function This_MOD.add_icon(Data)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Validación
+    if not Data.Event.element then return end
+    if not Data.GUI.button_icon then return end
+    if Data.Event.element ~= Data.GUI.button_icon then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Cargar la selección
+    local Select = Data.GUI.button_icon.elem_value
+
+    --- Restaurar el icono
+    Data.GUI.button_icon.elem_value = {
+        type = "virtual",
+        name = GPrefix.name .. "-icon"
+    }
+
+    --- Se intentó limpiar el icono
+    if not Select then return end
+
+    --- Convertir seleccion en texto
+    local function signal_to_rich_text(select)
+        local type = ""
+
+        if not select.type then
+            if prototypes.entity[select.name] then
+                type = "entity"
+            elseif prototypes.recipe[select.name] then
+                type = "recipe"
+            elseif prototypes.fluid[select.name] then
+                type = "fluid"
+            elseif prototypes.item[select.name] then
+                type = "item"
+            end
+        end
+
+        if select.type then
+            type = select.type
+            if select.type == "virtual" then
+                type = type .. "-signal"
+            end
+        end
+
+        return "[img=" .. type .. "." .. select.name .. "]"
+    end
+
+    --- Agregar la imagen seleccionada
+    local text = Data.GUI.textfield_new_channel.text
+    text = text .. signal_to_rich_text(Select)
+    Data.GUI.textfield_new_channel.text = text
+    Data.GUI.textfield_new_channel.focus()
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
 ---------------------------------------------------------------------------------------------------
+
+--- Validar el nombre del canal
+function This_MOD.validate_channel_name(Data)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Texto a evaluar
+    local Text = Data.GUI.textfield_new_channel
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Validación
+    if Text.text == "" or GPrefix.get_key(Data.channel, Text.text) then
+        Data.Player.play_sound({ path = "utility/cannot_build" })
+        Text.focus()
+        return
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Crear un nuevo canal
+    if Data.GUI.action == This_MOD.action.new_channel then
+        Data.gForce.last_index = Data.gForce.last_index or 0
+        for i = Data.gForce.last_index, 2 ^ 32 - 1, 1 do
+            local Index = GPrefix.pad_left_zeros(10, i)
+            if not Data.channel[Index] then
+                Data.channel[Index] = Text.text
+                Data.gForce.last_index = i
+                Data.GUI.entity.link_id = i
+                break
+            end
+        end
+    end
+
+    --- Cambiar el nombre de un canal
+    if Data.GUI.action == This_MOD.action.edit then
+        Data.channel[Data.GUI.selected_index] = Text.text
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Actualizar el indicador
+    Data.Entity = Data.GUI.entity
+    This_MOD.toggle_gui(Data) --- Destruir
+    This_MOD.toggle_gui(Data) --- Construir
+    Data.Player.play_sound({ path = "utility/wire_connect_pole" })
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
 
 --- Mostrar el cuerpo para crear un nuevo canal
 function This_MOD.show_new_channel(Data)
@@ -655,6 +547,116 @@ function This_MOD.show_new_channel(Data)
 
     --- Enfocar nombre
     Data.GUI.textfield_new_channel.focus()
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+--- Verificar el cambio de cada canal
+function This_MOD.check_channel()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Cargar toda la información
+    local Datas = This_MOD.create_data()
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Recorrer cada jugador enlistado
+    for player_index, GPlayer in pairs(Datas.GPlayers) do
+        if GPlayer.GUI.entity then
+            --- Consolidar información
+            local Data = This_MOD.create_data({
+                entity = GPlayer.GUI.entity,
+                player_index = player_index
+            })
+
+            repeat
+                --- No está mostrando el canal
+                if Data.GUI.action then break end
+
+                --- Valores a evaluar
+                local Channel_index = Data.GUI.dropdown_channel.selected_index
+                local Chest_index = This_MOD.get_index_of_link_id(Data)
+
+                --- Validar cambio
+                if Channel_index == Chest_index then break end
+
+                --- Actualizar el indicador
+                This_MOD.toggle_gui(Data) --- Destruir
+                This_MOD.toggle_gui(Data) --- Construir
+            until true
+        end
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+---------------------------------------------------------------------------------------------------
+
+
+
+
+
+---------------------------------------------------------------------------------------------------
+---> Funciones de apoyo
+---------------------------------------------------------------------------------------------------
+
+--- Obtener un canal
+function This_MOD.get_channel(Data, channel)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Cargar el poste del canal indicado
+    local Found = GPrefix.get_key(Data.channel, channel)
+    if Found then return channel end
+
+    --- Formato al indice
+    local Link_id = Data.Entity.link_id
+    Link_id = GPrefix.pad_left_zeros(10, Link_id)
+    if Data.channel[Link_id] then return end
+
+    --- Guardar el nuevo canal
+    Data.channel[Link_id] = channel
+
+    --- Devolver el canal indicado
+    return channel
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+--- Obtener el canal seleccionado
+function This_MOD.get_link_id_of_index(Data)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Variables a usar
+    local Index = 0
+    local Channel_index = Data.GUI.dropdown_channel.selected_index
+
+    --- Buscar el index
+    for key, _ in pairs(Data.channel) do
+        Index = Index + 1
+        if Index == Channel_index then
+            return tonumber(key)
+        end
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+--- Obtener el canal seleccionado
+function This_MOD.get_index_of_link_id(Data)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Variables a usar
+    local Index = 0
+    local Key = Data.Entity.link_id
+    Key = GPrefix.pad_left_zeros(10, Key)
+
+    --- Buscar el index
+    for key, _ in pairs(Data.channel) do
+        Index = Index + 1
+        if key == Key then
+            return Index
+        end
+    end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
