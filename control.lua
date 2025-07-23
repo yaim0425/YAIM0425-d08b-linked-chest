@@ -536,13 +536,6 @@ function This_MOD.button_action(Data)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    -- --- Cerrar la ventana
-    -- Flag = Data.Event.element == Data.GUI.button_exit
-    -- if Flag then
-    --     This_MOD.Toggle_window(Data)
-    --     return
-    -- end
-
     --- Cancelar el cambio de nombre o el nuevo canal
     Flag = Data.Event.element == Data.GUI.button_cancel
     if Flag then
@@ -568,16 +561,6 @@ function This_MOD.button_action(Data)
         This_MOD.show_new_channel(Data)
         return
     end
-
-    -- --- Cambiar el canal
-    -- Flag = Data.Event.element == Data.GUI.button_confirm
-    -- if Flag then
-    --     This_MOD.set_channel(Data.GUI.Node, This_MOD.get_channel_pos(Data))
-    --     Data.Event.element = Data.GUI.button_exit
-    --     This_MOD.Toggle_window(Data)
-    --     Data.Player.play_sound({ path = "entity-open/constant-combinator" })
-    --     return
-    -- end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
