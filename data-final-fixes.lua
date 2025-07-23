@@ -229,6 +229,8 @@ end
 
 --- Estilos a usar
 function This_MOD.styles()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     --- Cambiar los guiones del nombre
     local Prefix = string.gsub(This_MOD.prefix, "%-", "_")
 
@@ -236,16 +238,26 @@ function This_MOD.styles()
     local Styles = data.raw["gui-style"].default
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     ---> Multiuso
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     Styles[Prefix .. "flow_vertival_8"] = {
         type = "vertical_flow_style",
         vertical_spacing = 8
     }
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     ---> Cabeza
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     Styles[Prefix .. "flow_head"] = {
         type = "horizontal_flow_style",
         horizontal_spacing = 8,
@@ -273,8 +285,13 @@ function This_MOD.styles()
     }
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     ---> Cuerpo
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     Styles[Prefix .. "frame_entity"] = {
         type = "frame_style",
         parent = "entity_frame",
@@ -292,8 +309,13 @@ function This_MOD.styles()
     }
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     ---> Nuevo canal
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     Styles[Prefix .. "button_red"] = {
         type = "button_style",
         parent = "tool_button_red",
@@ -326,13 +348,19 @@ function This_MOD.styles()
         type = "textbox_style",
         width = 250
     }
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 --- Icono para las imagenes
 function This_MOD.icon()
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     --- Validación
     local Name = GPrefix.name .. "-icon"
     if data.raw["virtual-signal"][Name] then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Crear la señal
     GPrefix.extend({
@@ -344,6 +372,8 @@ function This_MOD.icon()
         subgroup = "virtual-signal",
         order = "z-z-o"
     })
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 ---------------------------------------------------------------------------------------------------
