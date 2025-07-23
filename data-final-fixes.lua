@@ -242,61 +242,9 @@ function This_MOD.styles()
 
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    ---> Multiuso
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    Styles[Prefix .. "flow_vertival_8"] = {
-        type = "vertical_flow_style",
-        vertical_spacing = 8
-    }
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    ---> Cabeza
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    Styles[Prefix .. "flow_head"] = {
-        type = "horizontal_flow_style",
-        horizontal_spacing = 8,
-        bottom_padding = 7
-    }
-    Styles[Prefix .. "label_title"] = {
-        type = "label_style",
-        parent = "frame_title",
-        button_padding = 3,
-        top_margin = -3
-    }
-    Styles[Prefix .. "empty_widget"] = {
-        type = "empty_widget_style",
-        parent = "draggable_space",
-        horizontally_stretchable = "on",
-        vertically_stretchable = "on",
-        height = 24
-    }
-    Styles[Prefix .. "button_close"] = {
-        type = "button_style",
-        parent = "close_button",
-        padding = 2,
-        margin = 0,
-        size = 24
-    }
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     ---> Cuerpo
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    Styles[Prefix .. "frame_entity"] = {
-        type = "frame_style",
-        parent = "entity_frame",
-        padding = 0
-    }
     Styles[Prefix .. "frame_body"] = {
         type = "frame_style",
         parent = "entity_frame",
