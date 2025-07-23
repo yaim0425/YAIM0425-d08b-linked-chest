@@ -148,10 +148,6 @@ function This_MOD.get_channel(Data, channel)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
---- Cambiar el canal
-function This_MOD.set_channel()
-end
-
 ---------------------------------------------------------------------------------------------------
 
 --- Seleccionar un nuevo objeto
