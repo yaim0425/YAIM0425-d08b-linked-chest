@@ -505,11 +505,14 @@ function This_MOD.validate_channel_name(Data)
                 break
             end
         end
+        Data.Player.play_sound({ path = "utility/wire_connect_pole" })
     end
 
     --- Cambiar el nombre de un canal
     if Data.GUI.action == This_MOD.action.edit then
         Data.channel[Data.GUI.selected_index] = Text.text
+        -- Data.Player.play_sound({ path = "utility/gui_tool_button" })
+        Data.Player.play_sound({ path = "gui_tool_button" })
     end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -518,7 +521,6 @@ function This_MOD.validate_channel_name(Data)
     Data.Entity = Data.GUI.entity
     This_MOD.toggle_gui(Data) --- Destruir
     This_MOD.toggle_gui(Data) --- Construir
-    Data.Player.play_sound({ path = "utility/wire_connect_pole" })
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
