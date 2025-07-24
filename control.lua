@@ -52,8 +52,6 @@ function This_MOD.setting_mod()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
----------------------------------------------------------------------------------------------------
-
 --- Cargar los eventos a ejecutar
 function This_MOD.load_events()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -98,6 +96,8 @@ function This_MOD.load_events()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
+
+---------------------------------------------------------------------------------------------------
 
 --- Crea y agrupar las variables a usar
 function This_MOD.create_data(event)
