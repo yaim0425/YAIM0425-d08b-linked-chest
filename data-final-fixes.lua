@@ -32,8 +32,8 @@ function This_MOD.start()
 
     --- Estilos a usar
     This_MOD.load_styles()
-    This_MOD.load_sound()
     This_MOD.loda_icon()
+    This_MOD.load_sound()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -255,7 +255,7 @@ function This_MOD.load_styles()
     }
     Styles[Prefix .. "drop_down_channel"] = {
         type = "dropdown_style",
-        width = 282 + 32
+        width = 296 + 64
     }
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -297,7 +297,7 @@ function This_MOD.load_styles()
     }
     Styles[Prefix .. "stretchable_textfield"] = {
         type = "textbox_style",
-        width = 250
+        width = 296
     }
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
