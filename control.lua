@@ -206,7 +206,7 @@ function This_MOD.toggle_gui(Data)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    local function build()
+    local function build_gui()
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Cambiar los guiones del nombre
@@ -249,12 +249,6 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.dropdown_channel.name = "drop_down_channel"
         Data.GUI.dropdown_channel = Data.GUI.frame_old_channel.add(Data.GUI.dropdown_channel)
         Data.GUI.dropdown_channel.style = Prefix .. "drop_down_channel"
-
-        --- Cargar los canales
-        for _, channel in pairs(Data.channel) do
-            Data.GUI.dropdown_channel.add_item(channel)
-        end
-        Data.GUI.dropdown_channel.add_item(This_MOD.new_channel)
 
         --- Botón para aplicar los cambios
         Data.GUI.button_edit = {}
@@ -317,7 +311,7 @@ function This_MOD.toggle_gui(Data)
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
-    local function destroy()
+    local function destroy_gui()
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         Data.GUI.frame_up.destroy()
@@ -329,11 +323,26 @@ function This_MOD.toggle_gui(Data)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+    --- Cargar los canales
+    local function load_channels()
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        for _, channel in pairs(Data.channel) do
+            Data.GUI.dropdown_channel.add_item(channel)
+        end
+        Data.GUI.dropdown_channel.add_item(This_MOD.new_channel)
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     --- Acción a ejecutar
     if validate_close() then
-        destroy()
+        destroy_gui()
     elseif validate_open() then
-        build()
+        build_gui()
+        load_channels()
         Data.GUI.entity = Data.Entity
         Data.GUI.dropdown_channel.selected_index = This_MOD.get_index_of_link_id(Data)
     end
