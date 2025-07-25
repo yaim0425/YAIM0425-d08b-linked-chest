@@ -206,7 +206,7 @@ function This_MOD.toggle_gui(Data)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    local function build_gui()
+    local function gui_build()
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Cambiar los guiones del nombre
@@ -311,7 +311,7 @@ function This_MOD.toggle_gui(Data)
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
-    local function destroy_gui()
+    local function gui_destroy()
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         Data.GUI.frame_up.destroy()
@@ -339,9 +339,9 @@ function This_MOD.toggle_gui(Data)
 
     --- Acción a ejecutar
     if validate_close() then
-        destroy_gui()
+        gui_destroy()
     elseif validate_open() then
-        build_gui()
+        gui_build()
         load_channels()
         Data.GUI.entity = Data.Entity
         Data.GUI.dropdown_channel.selected_index = This_MOD.get_index_of_link_id(Data)
