@@ -331,6 +331,7 @@ function This_MOD.toggle_gui(Data)
             Data.GUI.dropdown_channel.add_item(channel)
         end
         Data.GUI.dropdown_channel.add_item(This_MOD.new_channel)
+        Data.GUI.dropdown_channel.selected_index = This_MOD.get_index_of_link_id(Data)
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
@@ -344,7 +345,6 @@ function This_MOD.toggle_gui(Data)
         gui_build()
         load_channels()
         Data.GUI.entity = Data.Entity
-        Data.GUI.dropdown_channel.selected_index = This_MOD.get_index_of_link_id(Data)
     end
 end
 
