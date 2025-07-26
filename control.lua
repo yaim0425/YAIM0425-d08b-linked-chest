@@ -566,13 +566,8 @@ end
 function This_MOD.check_channel()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Cargar toda la información
-    local Datas = This_MOD.create_data()
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
     --- Recorrer cada jugador enlistado
-    for player_index, GPlayer in pairs(Datas.GPlayers) do
+    for player_index, GPlayer in pairs(This_MOD.create_data().GPlayers) do
         if GPlayer.GUI.entity then
             --- Consolidar información
             local Data = This_MOD.create_data({
