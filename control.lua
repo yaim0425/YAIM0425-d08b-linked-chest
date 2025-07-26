@@ -327,11 +327,12 @@ function This_MOD.toggle_gui(Data)
     local function load_channels()
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+        local Dropdown = Data.GUI.dropdown_channels
         for _, channel in pairs(Data.channel) do
-            Data.GUI.dropdown_channel.add_item(channel)
+            Dropdown.add_item(channel)
         end
-        Data.GUI.dropdown_channel.add_item(This_MOD.new_channel)
-        Data.GUI.dropdown_channel.selected_index = This_MOD.get_index_of_link_id(Data)
+        Dropdown.add_item(This_MOD.new_channel)
+        Dropdown.selected_index = This_MOD.get_index_of_link_id(Data)
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
