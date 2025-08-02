@@ -327,10 +327,12 @@ function This_MOD.toggle_gui(Data)
     local function load_channels()
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+        local Dropdown = Data.GUI.dropdown_channels
         for _, channel in pairs(Data.channel) do
-            Data.GUI.dropdown_channel.add_item(channel)
+            Dropdown.add_item(channel)
         end
-        Data.GUI.dropdown_channel.add_item(This_MOD.new_channel)
+        Dropdown.add_item(This_MOD.new_channel)
+        Dropdown.selected_index = This_MOD.get_index_of_link_id(Data)
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
@@ -344,7 +346,6 @@ function This_MOD.toggle_gui(Data)
         gui_build()
         load_channels()
         Data.GUI.entity = Data.Entity
-        Data.GUI.dropdown_channel.selected_index = This_MOD.get_index_of_link_id(Data)
     end
 end
 
@@ -566,13 +567,8 @@ end
 function This_MOD.check_channel()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Cargar toda la información
-    local Datas = This_MOD.create_data()
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
     --- Recorrer cada jugador enlistado
-    for player_index, GPlayer in pairs(Datas.GPlayers) do
+    for player_index, GPlayer in pairs(This_MOD.create_data().GPlayers) do
         if GPlayer.GUI.entity then
             --- Consolidar información
             local Data = This_MOD.create_data({
