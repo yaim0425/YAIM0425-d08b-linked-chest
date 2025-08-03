@@ -64,36 +64,36 @@ function This_MOD.load_events()
         This_MOD.toggle_gui(This_MOD.create_data(event))
     end)
 
-    --- Al seleccionar otro canal
-    script.on_event({
-        defines.events.on_gui_selection_state_changed
-    }, function(event)
-        This_MOD.selection_channel(This_MOD.create_data(event))
-    end)
+    -- --- Al seleccionar otro canal
+    -- script.on_event({
+    --     defines.events.on_gui_selection_state_changed
+    -- }, function(event)
+    --     This_MOD.selection_channel(This_MOD.create_data(event))
+    -- end)
 
-    --- Al hacer clic en algún elemento de la ventana
-    script.on_event({
-        defines.events.on_gui_click
-    }, function(event)
-        This_MOD.button_action(This_MOD.create_data(event))
-    end)
+    -- --- Al hacer clic en algún elemento de la ventana
+    -- script.on_event({
+    --     defines.events.on_gui_click
+    -- }, function(event)
+    --     This_MOD.button_action(This_MOD.create_data(event))
+    -- end)
 
-    --- Al presionar ENTER
-    script.on_event({
-        defines.events.on_gui_confirmed
-    }, function(event)
-        This_MOD.validate_channel_name(This_MOD.Create_data(event))
-    end)
+    -- --- Al presionar ENTER
+    -- script.on_event({
+    --     defines.events.on_gui_confirmed
+    -- }, function(event)
+    --     This_MOD.validate_channel_name(This_MOD.Create_data(event))
+    -- end)
 
-    --- Al seleccionar o deseleccionar un icon
-    script.on_event({
-        defines.events.on_gui_elem_changed
-    }, function(event)
-        This_MOD.add_icon(This_MOD.create_data(event))
-    end)
+    -- --- Al seleccionar o deseleccionar un icon
+    -- script.on_event({
+    --     defines.events.on_gui_elem_changed
+    -- }, function(event)
+    --     This_MOD.add_icon(This_MOD.create_data(event))
+    -- end)
 
-    --- Verificar que la entidad tenga energía
-    script.on_nth_tick(20, This_MOD.check_channel)
+    -- --- Verificar que la entidad tenga energía
+    -- script.on_nth_tick(20, This_MOD.check_channel)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -183,6 +183,7 @@ function This_MOD.toggle_gui(Data)
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
+
     local function validate_close()
         --- --- --- --- --- --- --- --- --- --- --- --- ---
         ---> Validación
@@ -312,6 +313,7 @@ function This_MOD.toggle_gui(Data)
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
+
     local function gui_destroy()
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -328,12 +330,15 @@ function This_MOD.toggle_gui(Data)
     local function load_channels()
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+        --- Cargar los canales
         local Dropdown = Data.GUI.dropdown_channels
         for _, channel in pairs(Data.channel) do
             Dropdown.add_item(channel)
         end
         Dropdown.add_item(This_MOD.new_channel)
-        Dropdown.selected_index = This_MOD.get_index_of_link_id(Data)
+
+        --- Seleccionar el canal actual
+        Dropdown.selected_index = Data.node.channel.index
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
