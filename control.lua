@@ -428,7 +428,7 @@ function This_MOD.selection_channel(Data)
     if Index == #Channels.items then
         Data.GUI.action = This_MOD.action.new_channel
         This_MOD.show_new_channel(Data)
-        This_MOD.sound_click(Data)
+        This_MOD.sound_channel_selected(Data)
         return
     end
 
@@ -565,10 +565,13 @@ function This_MOD.validate_channel_name(Data)
             Data.gForce.last_value = Data.gForce.last_value + 1
         end
 
-        --- Agregar el nuevo canal
-        Data.Entity.link_id = Data.gForce.last_value
+        --- Agregar el nuevo nombre a la GUI
         Dropdown.add_item(Textbox.text, Index)
 
+        --- Cambiar el indicador
+        Data.Entity.link_id = Data.gForce.last_value
+
+        --- Efecto de sonido
         This_MOD.sound_channel_changed(Data)
     end
 
@@ -578,12 +581,12 @@ function This_MOD.validate_channel_name(Data)
         Dropdown.remove_item(Index)
         Dropdown.add_item(Textbox.text, Index)
 
+        --- Efecto de sonido
         This_MOD.sound_good(Data)
     end
 
     --- Actualizar el nombre
     This_MOD.get_channel(Data).name = Textbox.text
-
     This_MOD.show_old_channel(Data)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -688,7 +691,7 @@ function This_MOD.sound_bad(Data)
 end
 
 --- Sonido de click
-function This_MOD.sound_click(Data)
+function This_MOD.sound_channel_selected(Data)
     Data.Player.play_sound({ path = "utility/gui_click" })
 end
 
