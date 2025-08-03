@@ -56,6 +56,7 @@ end
 function This_MOD.load_events()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+    --- Abrir o cerrar la interfaz
     script.on_event({
         defines.events.on_gui_opened,
         defines.events.on_gui_closed
