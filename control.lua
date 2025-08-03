@@ -422,10 +422,10 @@ function This_MOD.selection_channel(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Selección actul
-    local Selected_index = Channels.selected_index
+    local Index = Channels.selected_index
 
     --- Se quiere crear un nuevo canal
-    if Selected_index == #Channels.items then
+    if Index == #Channels.items then
         Data.GUI.action = This_MOD.action.new_channel
         This_MOD.show_new_channel(Data)
         This_MOD.sound_click(Data)
@@ -433,7 +433,7 @@ function This_MOD.selection_channel(Data)
     end
 
     --- Cambiar el canal del cofre
-    Data.Entity.link_id = Data.channels[Selected_index].link_id
+    Data.Entity.link_id = Data.channels[Index].link_id
     This_MOD.sound_channel_changed(Data)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
