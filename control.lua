@@ -138,11 +138,8 @@ function This_MOD.create_data(event)
     -- Data.gForce.ghosts = Data.gForce.ghosts or {}
     -- Data.ghosts = Data.gForce.ghosts
 
-    --- Cargar el nodo a tratar
-    if Data.Entity or Data.GUI then
-        local Entity = Data.Entity or Data.GUI.entity
-        Data.node = GPrefix.get_table(Data.nodes, "entity", Entity)
-    end
+    --- Entidad a trabajar
+    if not Data.Entity then Data.Entity = Data.GUI.entity end
 
     --- Devolver el consolidado de los datos
     return Data
@@ -216,7 +213,7 @@ function This_MOD.toggle_gui(Data)
         ---> Validación
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        if not Data.GUI.frame_up then return false end
+        if not Data.GUI.frame_main then return false end
         if not Data.Entity then return false end
         if not Data.Entity.valid then return false end
         if Data.Entity.name ~= This_MOD.ref.name then return false end
@@ -238,7 +235,7 @@ function This_MOD.toggle_gui(Data)
         ---> Validación
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        if Data.GUI.frame_up then return false end
+        if Data.GUI.frame_main then return false end
         if not Data.Entity then return false end
         if not Data.Entity.valid then return false end
         if not GPrefix.has_id(Data.Entity.name, This_MOD.id) then return false end
@@ -271,7 +268,7 @@ function This_MOD.toggle_gui(Data)
     local function gui_destroy()
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        Data.GUI.frame_up.destroy()
+        Data.GUI.frame_main.destroy()
         Data.GPlayer.GUI = {}
         Data.GUI = Data.GPlayer.GUI
 
@@ -291,15 +288,15 @@ function This_MOD.toggle_gui(Data)
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Crear el cuadro principal
-        Data.GUI.frame_up = {}
-        Data.GUI.frame_up.type = "frame"
-        Data.GUI.frame_up.name = "frame_up"
-        Data.GUI.frame_up.direction = "vertical"
-        Data.GUI.frame_up.anchor = {}
-        Data.GUI.frame_up.anchor.gui = defines.relative_gui_type.linked_container_gui
-        Data.GUI.frame_up.anchor.position = defines.relative_gui_position.top
-        Data.GUI.frame_up = Data.Player.gui.relative.add(Data.GUI.frame_up)
-        Data.GUI.frame_up.style = "frame"
+        Data.GUI.frame_main = {}
+        Data.GUI.frame_main.type = "frame"
+        Data.GUI.frame_main.name = "frame_main"
+        Data.GUI.frame_main.direction = "vertical"
+        Data.GUI.frame_main.anchor = {}
+        Data.GUI.frame_main.anchor.gui = defines.relative_gui_type.linked_container_gui
+        Data.GUI.frame_main.anchor.position = defines.relative_gui_position.top
+        Data.GUI.frame_main = Data.Player.gui.relative.add(Data.GUI.frame_main)
+        Data.GUI.frame_main.style = "frame"
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -312,7 +309,7 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.frame_old_channel.type = "frame"
         Data.GUI.frame_old_channel.name = "frame_old_channel"
         Data.GUI.frame_old_channel.direction = "horizontal"
-        Data.GUI.frame_old_channel = Data.GUI.frame_up.add(Data.GUI.frame_old_channel)
+        Data.GUI.frame_old_channel = Data.GUI.frame_main.add(Data.GUI.frame_old_channel)
         Data.GUI.frame_old_channel.style = Prefix .. "frame_body"
 
         --- Barra de movimiento
@@ -342,7 +339,7 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.frame_new_channel.type = "frame"
         Data.GUI.frame_new_channel.name = "frame_new_channels"
         Data.GUI.frame_new_channel.direction = "horizontal"
-        Data.GUI.frame_new_channel = Data.GUI.frame_up.add(Data.GUI.frame_new_channel)
+        Data.GUI.frame_new_channel = Data.GUI.frame_main.add(Data.GUI.frame_new_channel)
         Data.GUI.frame_new_channel.style = Prefix .. "frame_body"
         Data.GUI.frame_new_channel.visible = false
 
@@ -420,7 +417,7 @@ function This_MOD.selection_channel(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Validación
-    if not Data.GUI.frame_up then return end
+    if not Data.GUI.frame_main then return end
     local Element = Data.Event.element
     local Channels = Data.GUI.dropdown_channels
     if Element and Element ~= Channels then return end
@@ -439,7 +436,7 @@ function This_MOD.selection_channel(Data)
     end
 
     --- Cambiar el canal del cofre
-    Data.GUI.entity.link_id = Data.channels[Selected_index].link_id
+    Data.Entity.link_id = Data.channels[Selected_index].link_id
     Data.Player.play_sound({ path = "utility/wire_connect_pole" })
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -456,9 +453,7 @@ function This_MOD.button_action(Data)
 
     --- Cancelar el cambio de nombre o el nuevo canal
     if Data.Event.element == Data.GUI.button_cancel then
-        -- Data.Entity = Data.GUI.entity
-        -- This_MOD.toggle_gui(Data) --- Destruir
-        -- This_MOD.toggle_gui(Data) --- Construir
+        This_MOD.show_old_channel(Data)
         return
     end
 
@@ -587,6 +582,24 @@ function This_MOD.validate_channel_name(Data)
 end
 
 ---------------------------------------------------------------------------------------------------
+
+--- Mostrar el cuerpo para seleccionar un canal
+function This_MOD.show_old_channel(Data)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Cambiar de frame
+    Data.GUI.frame_new_channel.visible = false
+    Data.GUI.frame_old_channel.visible = true
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Enfocar la selección
+    Data.GUI.dropdown_channels.selected_index = This_MOD.get_channel(Data).index
+    This_MOD.selection_channel(Data)
+    Data.GUI.action = nil
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
 
 --- Mostrar el cuerpo para crear un nuevo canal
 function This_MOD.show_new_channel(Data)
