@@ -56,6 +56,17 @@ end
 function This_MOD.load_events()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+    --- Al crear la entidad
+    script.on_event({
+        defines.events.on_built_entity,
+        defines.events.on_robot_built_entity,
+        defines.events.script_raised_built,
+        defines.events.script_raised_revive,
+        defines.events.on_space_platform_built_entity,
+    }, function(event)
+        This_MOD.create_entity(This_MOD.create_data(event))
+    end)
+
     --- Abrir o cerrar la interfaz
     script.on_event({
         defines.events.on_gui_opened,
@@ -146,6 +157,53 @@ end
 
 
 ---------------------------------------------------------------------------------------------------
+---> Acciones por eventos
+---------------------------------------------------------------------------------------------------
+
+--- Al crear la entidad
+function This_MOD.create_entity(Data)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Validación
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    if not Data.Entity then return end
+    if not GPrefix.has_id(Data.Entity.name, This_MOD.id) then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- ---
+    ---> Canal por defecto
+    --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    if #Data.channels == 0 then
+        local Entity = Data.Entity
+        Data.Entity = { link_id = 0 }
+        This_MOD.get_channel(Data)
+        Data.Entity = Entity
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- ---
+    ---> Canal del cofre
+    --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    This_MOD.get_channel(Data)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+---------------------------------------------------------------------------------------------------
+
+
+
+
+
+---------------------------------------------------------------------------------------------------
 ---> Acciones en el GUI
 ---------------------------------------------------------------------------------------------------
 
@@ -167,31 +225,6 @@ function This_MOD.toggle_gui(Data)
         if not Data.Entity then return false end
         if not Data.Entity.valid then return false end
         if not GPrefix.has_id(Data.Entity.name, This_MOD.id) then return false end
-
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
-        ---> Canal por defecto
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-        if #Data.channels == 0 then
-            local Entity = Data.Entity
-            Data.Entity = { link_id = 0 }
-            This_MOD.get_channel(Data)
-            Data.Entity = Entity
-        end
-
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
-
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
-        ---> Canal del cofre
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-        This_MOD.get_channel(Data)
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
