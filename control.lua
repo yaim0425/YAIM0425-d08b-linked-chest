@@ -103,9 +103,6 @@ function This_MOD.load_events()
     --     This_MOD.validate_channel_name(This_MOD.Create_data(event))
     -- end)
 
-    -- --- Verificar que la entidad tenga energía
-    -- script.on_nth_tick(20, This_MOD.check_channel)
-
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
@@ -629,40 +626,6 @@ function This_MOD.show_new_channel(Data)
 
     --- Enfocar nombre
     Data.GUI.textfield_new_channel.focus()
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
---- Verificar el cambio de cada canal
-function This_MOD.check_channel()
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Recorrer cada jugador enlistado
-    for player_index, GPlayer in pairs(This_MOD.create_data().GPlayers) do
-        if GPlayer.GUI.entity then
-            --- Consolidar información
-            local Data = This_MOD.create_data({
-                entity = GPlayer.GUI.entity,
-                player_index = player_index
-            })
-
-            repeat
-                --- No está mostrando el canal
-                if Data.GUI.action then break end
-
-                --- Valores a evaluar
-                local Channel_index = Data.GUI.dropdown_channels.selected_index
-                local Chest_index = This_MOD.get_index_of_link_id(Data)
-
-                --- Validar cambio
-                if Channel_index == Chest_index then break end
-
-                --- Actualizar el indicador
-                This_MOD.toggle_gui(Data) --- Destruir
-                This_MOD.toggle_gui(Data) --- Construir
-            until true
-        end
-    end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
