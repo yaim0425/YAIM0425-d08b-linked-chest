@@ -96,12 +96,12 @@ function This_MOD.load_events()
         This_MOD.add_icon(This_MOD.create_data(event))
     end)
 
-    -- --- Al presionar ENTER
-    -- script.on_event({
-    --     defines.events.on_gui_confirmed
-    -- }, function(event)
-    --     This_MOD.validate_channel_name(This_MOD.Create_data(event))
-    -- end)
+    --- Al presionar ENTER
+    script.on_event({
+        defines.events.on_gui_confirmed
+    }, function(event)
+        This_MOD.validate_channel_name(This_MOD.Create_data(event))
+    end)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -456,7 +456,7 @@ function This_MOD.button_action(Data)
 
     --- Cambiar el nombre de un canal o agregar un nuevo canal
     if Data.Event.element == Data.GUI.button_confirm then
-        -- This_MOD.validate_channel_name(Data)
+        This_MOD.validate_channel_name(Data)
         return
     end
 
@@ -543,8 +543,10 @@ function This_MOD.validate_channel_name(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Validación
-    if Textbox.text == "" or GPrefix.get_key(Data.channel, Textbox.text) then
-        Data.Player.play_sound({ path = "utility/cannot_build" })
+    local Flag = Textbox.text == ""
+    Flag = Flag or GPrefix.get_table(Data.channels, "name", Textbox.text)
+    if Flag then
+        This_MOD.sound_bad(Data)
         Textbox.focus()
         return
     end
@@ -553,32 +555,23 @@ function This_MOD.validate_channel_name(Data)
 
     --- Crear un nuevo canal
     if Data.GUI.action == This_MOD.action.new_channel then
-        Data.gForce.last_index = Data.gForce.last_index or 0
-        for i = Data.gForce.last_index, 2 ^ 32 - 1, 1 do
-            local Index = GPrefix.pad_left_zeros(10, i)
-            if not Data.channel[Index] then
-                Data.channel[Index] = Textbox.text
-                Data.gForce.last_index = i
-                Data.GUI.entity.link_id = i
-                break
-            end
-        end
-        Data.Player.play_sound({ path = "utility/wire_connect_pole" })
+        This_MOD.sound_channel_changed(Data)
     end
 
     --- Cambiar el nombre de un canal
     if Data.GUI.action == This_MOD.action.edit then
-        Data.channel[Data.GUI.selected_index] = Textbox.text
-        -- Data.Player.play_sound({ path = "utility/gui_tool_button" })
-        Data.Player.play_sound({ path = "gui_tool_button" })
+        local Dropdown = Data.GUI.dropdown_channels
+        local Index = Dropdown.selected_index
+
+        Dropdown.remove_item(Index)
+        Dropdown.add_item(Textbox.text, Index)
+
+        This_MOD.sound_good(Data)
     end
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Actualizar el indicador
-    Data.Entity = Data.GUI.entity
-    This_MOD.toggle_gui(Data) --- Destruir
-    This_MOD.toggle_gui(Data) --- Construir
+    --- Actualizar la información
+    This_MOD.get_channel(Data).name = Textbox.text
+    This_MOD.show_old_channel(Data)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -665,45 +658,6 @@ function This_MOD.get_channel(Data)
 
     --- Devolver el canal indicado
     return Channel
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
---- Obtener el canal seleccionado
-function This_MOD.get_link_id_of_index(Data)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Variables a usar
-    local Index = 0
-    local Channel_index = Data.GUI.dropdown_channels.selected_index
-
-    --- Buscar el index
-    for key, _ in pairs(Data.channel) do
-        Index = Index + 1
-        if Index == Channel_index then
-            return tonumber(key)
-        end
-    end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
---- Obtener el canal seleccionado
-function This_MOD.get_index_of_link_id(Data)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Variables a usar
-    local Index = 0
-    local Key = Data.Entity.link_id
-    Key = GPrefix.pad_left_zeros(10, Key)
-
-    --- Buscar el index
-    for key, _ in pairs(Data.channel) do
-        Index = Index + 1
-        if key == Key then
-            return Index
-        end
-    end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
