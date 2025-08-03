@@ -176,10 +176,13 @@ function This_MOD.toggle_gui(Data)
         ---> Canal por defecto
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        This_MOD.get_channel({
-            Entity = { link_id = 0 },
-            channel = Data.channel
-        }, "0")
+        if not Data.channels[1] then
+            Data.channels[1] = {
+                index = 1,
+                name = "[img=virtual-signal.signal-0]",
+                link_id = 0
+            }
+        end
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -189,7 +192,7 @@ function This_MOD.toggle_gui(Data)
         ---> Canal del cofre
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        This_MOD.get_channel(Data, "" .. Data.Entity.link_id)
+        This_MOD.get_channel(Data, nil)
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -637,20 +640,41 @@ end
 function This_MOD.get_channel(Data, channel)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Cargar el poste del canal indicado
-    local Found = GPrefix.get_key(Data.channel, channel)
-    if Found then return channel end
+    --- Valores de busqueda
+    local Key, Value
+    if not channel then
+        Key = "link_id"
+        Value = Data.Entity.link_id
+    else
+        Key = "name"
+        Value = channel
+    end
 
-    --- Formato al indice
-    local Link_id = Data.Entity.link_id
-    Link_id = GPrefix.pad_left_zeros(10, Link_id)
-    if Data.channel[Link_id] then return end
+    --- Cargar el canal indicado
+    local Channel = GPrefix.get_table(Data.channels, Key, Value)
+    if Channel then return Channel end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Guardar el nuevo canal
-    Data.channel[Link_id] = channel
+    Channel = {}
+    Channel.index = #Data.channels + 1
+    Channel.link_id = Data.Entity.link_id
+    Data.channels[Channel.index] = Channel
+
+    --- Nombre del canal
+    if not channel then
+        Channel.name = ""
+        local Index = tostring(Channel.index)
+        for n = 1, #Index do
+            Channel.name = Channel.name .. "[img=virtual-signal.signal-" .. Index:sub(n, n) .. "]"
+        end
+    else
+        Channel.name = channel
+    end
 
     --- Devolver el canal indicado
-    return channel
+    return Channel
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
