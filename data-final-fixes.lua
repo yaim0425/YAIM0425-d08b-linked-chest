@@ -32,7 +32,7 @@ function This_MOD.start()
 
     --- Estilos a usar
     This_MOD.load_styles()
-    This_MOD.loda_icon()
+    This_MOD.load_icon()
     This_MOD.load_sound()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -253,8 +253,17 @@ function This_MOD.load_styles()
         horizontally_stretchable = "off",
         padding = 4
     }
-    Styles[Prefix .. "drop_down_channel"] = {
+    Styles[Prefix .. "drop_down_channels"] = {
         type = "dropdown_style",
+        parent = "dropdown",
+        list_box_style = {
+            type = "list_box_style",
+            item_style = {
+                type = "button_style",
+                parent = "list_box_item",
+                left_click_sound = This_MOD.sound .. "empty_audio.ogg",
+            },
+        },
         width = 296 + 64
     }
 
@@ -304,7 +313,7 @@ function This_MOD.load_styles()
 end
 
 --- Icono para las imagenes
-function This_MOD.loda_icon()
+function This_MOD.load_icon()
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Validación
