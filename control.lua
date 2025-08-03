@@ -89,18 +89,18 @@ function This_MOD.load_events()
         This_MOD.button_action(This_MOD.create_data(event))
     end)
 
+    --- Al seleccionar o deseleccionar un icon
+    script.on_event({
+        defines.events.on_gui_elem_changed
+    }, function(event)
+        This_MOD.add_icon(This_MOD.create_data(event))
+    end)
+
     -- --- Al presionar ENTER
     -- script.on_event({
     --     defines.events.on_gui_confirmed
     -- }, function(event)
     --     This_MOD.validate_channel_name(This_MOD.Create_data(event))
-    -- end)
-
-    -- --- Al seleccionar o deseleccionar un icon
-    -- script.on_event({
-    --     defines.events.on_gui_elem_changed
-    -- }, function(event)
-    --     This_MOD.add_icon(This_MOD.create_data(event))
     -- end)
 
     -- --- Verificar que la entidad tenga energía
@@ -479,7 +479,6 @@ function This_MOD.add_icon(Data)
 
     --- Validación
     if not Data.Event.element then return end
-    if not Data.GUI.button_icon then return end
     if Data.Event.element ~= Data.GUI.button_icon then return end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -493,8 +492,14 @@ function This_MOD.add_icon(Data)
         name = GPrefix.name .. "-icon"
     }
 
+    --- Renombrar
+    local Textbox = Data.GUI.textfield_new_channel
+
     --- Se intentó limpiar el icono
-    if not Select then return end
+    if not Select then
+        Textbox.focus()
+        return
+    end
 
     --- Convertir seleccion en texto
     local function signal_to_rich_text(select)
@@ -523,10 +528,10 @@ function This_MOD.add_icon(Data)
     end
 
     --- Agregar la imagen seleccionada
-    local Textbox = Data.GUI.textfield_new_channel.text
-    Textbox = Textbox .. signal_to_rich_text(Select)
-    Data.GUI.textfield_new_channel.text = Textbox
-    Data.GUI.textfield_new_channel.focus()
+    local Text = Textbox.text
+    Text = Text .. signal_to_rich_text(Select)
+    Textbox.text = Text
+    Textbox.focus()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
