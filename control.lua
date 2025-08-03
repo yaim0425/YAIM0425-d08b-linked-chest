@@ -318,9 +318,9 @@ function This_MOD.toggle_gui(Data)
         --- Barra de movimiento
         Data.GUI.dropdown_channels = {}
         Data.GUI.dropdown_channels.type = "drop-down"
-        Data.GUI.dropdown_channels.name = "drop_down_channel"
+        Data.GUI.dropdown_channels.name = "drop_down_channels"
         Data.GUI.dropdown_channels = Data.GUI.frame_old_channel.add(Data.GUI.dropdown_channels)
-        Data.GUI.dropdown_channels.style = Prefix .. "drop_down_channel"
+        Data.GUI.dropdown_channels.style = Prefix .. "drop_down_channels"
 
         --- Botón para aplicar los cambios
         Data.GUI.button_edit = {}

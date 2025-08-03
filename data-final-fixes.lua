@@ -253,8 +253,17 @@ function This_MOD.load_styles()
         horizontally_stretchable = "off",
         padding = 4
     }
-    Styles[Prefix .. "drop_down_channel"] = {
+    Styles[Prefix .. "drop_down_channels"] = {
         type = "dropdown_style",
+        parent = "dropdown",
+        list_box_style = {
+            type = "list_box_style",
+            item_style = {
+                type = "button_style",
+                parent = "list_box_item",
+                left_click_sound = This_MOD.sound .. "empty_audio.ogg",
+            },
+        },
         width = 296 + 64
     }
 
