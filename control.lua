@@ -434,11 +434,13 @@ function This_MOD.selection_channel(Data)
     if Selected_index == #Channels.items then
         Data.GUI.action = This_MOD.action.new_channel
         This_MOD.show_new_channel(Data)
+        Data.Player.play_sound({ path = "utility/gui_click" })
         return
     end
 
     --- Cambiar el canal del cofre
     Data.GUI.entity.link_id = Data.channels[Selected_index].link_id
+    Data.Player.play_sound({ path = "utility/wire_connect_pole" })
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
