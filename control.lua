@@ -546,8 +546,6 @@ function This_MOD.add_icon(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
----------------------------------------------------------------------------------------------------
-
 --- Validar el nombre del canal
 function This_MOD.validate_channel_name(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -597,6 +595,8 @@ function This_MOD.validate_channel_name(Data)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
+
+---------------------------------------------------------------------------------------------------
 
 --- Mostrar el cuerpo para crear un nuevo canal
 function This_MOD.show_new_channel(Data)
