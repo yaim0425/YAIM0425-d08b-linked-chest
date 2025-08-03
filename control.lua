@@ -75,12 +75,12 @@ function This_MOD.load_events()
         This_MOD.toggle_gui(This_MOD.create_data(event))
     end)
 
-    -- --- Al seleccionar otro canal
-    -- script.on_event({
-    --     defines.events.on_gui_selection_state_changed
-    -- }, function(event)
-    --     This_MOD.selection_channel(This_MOD.create_data(event))
-    -- end)
+    --- Al seleccionar otro canal
+    script.on_event({
+        defines.events.on_gui_selection_state_changed
+    }, function(event)
+        This_MOD.selection_channel(This_MOD.create_data(event))
+    end)
 
     -- --- Al hacer clic en algún elemento de la ventana
     -- script.on_event({
@@ -438,7 +438,7 @@ function This_MOD.selection_channel(Data)
     end
 
     --- Cambiar el canal del cofre
-    Data.GUI.entity.link_id = This_MOD.get_link_id_of_index(Data)
+    Data.GUI.entity.link_id = Data.channels[Selected_index].link_id
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
