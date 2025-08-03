@@ -428,13 +428,13 @@ function This_MOD.selection_channel(Data)
     if Selected_index == #Channels.items then
         Data.GUI.action = This_MOD.action.new_channel
         This_MOD.show_new_channel(Data)
-        Data.Player.play_sound({ path = "utility/gui_click" })
+        This_MOD.sound_click(Data)
         return
     end
 
     --- Cambiar el canal del cofre
     Data.Entity.link_id = Data.channels[Selected_index].link_id
-    Data.Player.play_sound({ path = "utility/wire_connect_pole" })
+    This_MOD.sound_channel_changed(Data)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -706,6 +706,28 @@ function This_MOD.get_index_of_link_id(Data)
     end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+---------------------------------------------------------------------------------------------------
+
+--- Sonido normal
+function This_MOD.sound_good(Data)
+    Data.Player.play_sound({ path = "gui_tool_button" })
+end
+
+--- Sonido de error
+function This_MOD.sound_bad(Data)
+    Data.Player.play_sound({ path = "utility/cannot_build" })
+end
+
+--- Sonido de click
+function This_MOD.sound_click(Data)
+    Data.Player.play_sound({ path = "utility/gui_click" })
+end
+
+--- Sonido de cambio de canal
+function This_MOD.sound_channel_changed(Data)
+    Data.Player.play_sound({ path = "utility/wire_connect_pole" })
 end
 
 ---------------------------------------------------------------------------------------------------
