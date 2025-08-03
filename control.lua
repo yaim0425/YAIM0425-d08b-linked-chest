@@ -216,6 +216,28 @@ function This_MOD.toggle_gui(Data)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+    local function validate_close()
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        ---> Validación
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        if not Data.GUI.frame_up then return false end
+        if not Data.Entity then return false end
+        if not Data.Entity.valid then return false end
+        if Data.Entity.name ~= This_MOD.ref.name then return false end
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        ---> Aprovado
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        return true
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+    end
+
     local function validate_open()
         --- --- --- --- --- --- --- --- --- --- --- --- ---
         ---> Validación
@@ -239,29 +261,17 @@ function This_MOD.toggle_gui(Data)
         --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
 
-    local function validate_close()
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
-        ---> Validación
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        if not Data.GUI.frame_up then return false end
-        if not Data.Entity then return false end
-        if not Data.Entity.valid then return false end
-        if Data.Entity.name ~= This_MOD.ref.name then return false end
-
+    local function gui_destroy()
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
-        ---> Aprovado
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-        return true
+        Data.GUI.frame_up.destroy()
+        Data.GPlayer.GUI = {}
+        Data.GUI = Data.GPlayer.GUI
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     local function gui_build()
         --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -365,16 +375,6 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.button_confirm.tooltip = { "gui.confirm" }
         Data.GUI.button_confirm = Data.GUI.frame_new_channel.add(Data.GUI.button_confirm)
         Data.GUI.button_confirm.style = Prefix .. "button_green"
-
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
-    end
-
-    local function gui_destroy()
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-        Data.GUI.frame_up.destroy()
-        Data.GPlayer.GUI = {}
-        Data.GUI = Data.GPlayer.GUI
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
