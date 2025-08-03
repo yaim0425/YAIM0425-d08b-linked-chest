@@ -465,8 +465,8 @@ function This_MOD.button_action(Data)
 
     --- Editar el nombre del canal seleccionado
     if Data.Event.element == Data.GUI.button_edit then
-        -- Data.GUI.action = This_MOD.action.edit
-        -- This_MOD.show_new_channel(Data)
+        Data.GUI.action = This_MOD.action.edit
+        This_MOD.show_new_channel(Data)
         return
     end
 
@@ -523,9 +523,9 @@ function This_MOD.add_icon(Data)
     end
 
     --- Agregar la imagen seleccionada
-    local text = Data.GUI.textfield_new_channel.text
-    text = text .. signal_to_rich_text(Select)
-    Data.GUI.textfield_new_channel.text = text
+    local Textbox = Data.GUI.textfield_new_channel.text
+    Textbox = Textbox .. signal_to_rich_text(Select)
+    Data.GUI.textfield_new_channel.text = Textbox
     Data.GUI.textfield_new_channel.focus()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -536,14 +536,14 @@ function This_MOD.validate_channel_name(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Texto a evaluar
-    local Text = Data.GUI.textfield_new_channel
+    local Textbox = Data.GUI.textfield_new_channel
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Validación
-    if Text.text == "" or GPrefix.get_key(Data.channel, Text.text) then
+    if Textbox.text == "" or GPrefix.get_key(Data.channel, Textbox.text) then
         Data.Player.play_sound({ path = "utility/cannot_build" })
-        Text.focus()
+        Textbox.focus()
         return
     end
 
@@ -555,7 +555,7 @@ function This_MOD.validate_channel_name(Data)
         for i = Data.gForce.last_index, 2 ^ 32 - 1, 1 do
             local Index = GPrefix.pad_left_zeros(10, i)
             if not Data.channel[Index] then
-                Data.channel[Index] = Text.text
+                Data.channel[Index] = Textbox.text
                 Data.gForce.last_index = i
                 Data.GUI.entity.link_id = i
                 break
@@ -566,7 +566,7 @@ function This_MOD.validate_channel_name(Data)
 
     --- Cambiar el nombre de un canal
     if Data.GUI.action == This_MOD.action.edit then
-        Data.channel[Data.GUI.selected_index] = Text.text
+        Data.channel[Data.GUI.selected_index] = Textbox.text
         -- Data.Player.play_sound({ path = "utility/gui_tool_button" })
         Data.Player.play_sound({ path = "gui_tool_button" })
     end
@@ -617,10 +617,9 @@ function This_MOD.show_new_channel(Data)
 
     --- Configuración para editar el nombre
     if Data.GUI.action == This_MOD.action.edit then
-        local Channels = Data.GUI.dropdown_channels
-        local Text = Data.GUI.textfield_new_channel
-        Text.text = Channels.get_item(Channels.selected_index)
-        Data.GUI.selected_index = GPrefix.get_key(Data.channel, Text.text)
+        local Dropdown = Data.GUI.dropdown_channels
+        local Textbox = Data.GUI.textfield_new_channel
+        Textbox.text = Data.channels[Dropdown.selected_index].name
     end
 
     --- Enfocar nombre
