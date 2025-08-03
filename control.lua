@@ -82,12 +82,12 @@ function This_MOD.load_events()
         This_MOD.selection_channel(This_MOD.create_data(event))
     end)
 
-    -- --- Al hacer clic en algún elemento de la ventana
-    -- script.on_event({
-    --     defines.events.on_gui_click
-    -- }, function(event)
-    --     This_MOD.button_action(This_MOD.create_data(event))
-    -- end)
+    --- Al hacer clic en algún elemento de la ventana
+    script.on_event({
+        defines.events.on_gui_click
+    }, function(event)
+        This_MOD.button_action(This_MOD.create_data(event))
+    end)
 
     -- --- Al presionar ENTER
     -- script.on_event({
@@ -465,28 +465,23 @@ function This_MOD.button_action(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Cancelar el cambio de nombre o el nuevo canal
-    Flag = Data.Event.element == Data.GUI.button_cancel
-    if Flag then
-        Data.Entity = Data.GUI.entity
-        This_MOD.toggle_gui(Data) --- Destruir
-        This_MOD.toggle_gui(Data) --- Construir
+    if Data.Event.element == Data.GUI.button_cancel then
+        -- Data.Entity = Data.GUI.entity
+        -- This_MOD.toggle_gui(Data) --- Destruir
+        -- This_MOD.toggle_gui(Data) --- Construir
         return
     end
 
     --- Cambiar el nombre de un canal o agregar un nuevo canal
-    Flag = false or Data.GUI.action == This_MOD.action.edit
-    Flag = Flag or Data.GUI.action == This_MOD.action.new_channel
-    Flag = Flag and Data.Event.element == Data.GUI.button_confirm
-    if Flag then
-        This_MOD.validate_channel_name(Data)
+    if Data.Event.element == Data.GUI.button_confirm then
+        -- This_MOD.validate_channel_name(Data)
         return
     end
 
     --- Editar el nombre del canal seleccionado
-    Flag = Data.Event.element == Data.GUI.button_edit
-    if Flag then
-        Data.GUI.action = This_MOD.action.edit
-        This_MOD.show_new_channel(Data)
+    if Data.Event.element == Data.GUI.button_edit then
+        -- Data.GUI.action = This_MOD.action.edit
+        -- This_MOD.show_new_channel(Data)
         return
     end
 
