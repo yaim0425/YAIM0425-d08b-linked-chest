@@ -211,11 +211,6 @@ end
 function This_MOD.toggle_gui(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Validación
-    if not Data.gForces then return end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
     local function validate_close()
         --- --- --- --- --- --- --- --- --- --- --- --- ---
         ---> Validación
@@ -247,6 +242,16 @@ function This_MOD.toggle_gui(Data)
         if not Data.Entity then return false end
         if not Data.Entity.valid then return false end
         if not GPrefix.has_id(Data.Entity.name, This_MOD.id) then return false end
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Garantizar la creación del canal
+        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        This_MOD.create_entity(Data)
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
