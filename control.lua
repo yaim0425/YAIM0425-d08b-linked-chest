@@ -449,18 +449,8 @@ end
 function This_MOD.button_action(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Variables a usar
-    local Flag = false
-    local EventID = 0
-
     --- Validar el elemento
-    EventID = defines.events.on_gui_click
-    Flag = Data.Event.name == EventID
-    if not Flag then return end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-
+    if not Data.GUI.frame_main then return end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
