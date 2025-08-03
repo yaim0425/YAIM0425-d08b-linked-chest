@@ -106,12 +106,32 @@ function This_MOD.create_data(event)
 
     --- Consolidar la información
     local Data = GPrefix.create_data(event or {}, This_MOD)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Validación
     if not Data.gForce then return Data end
     if not event then return Data end
 
-    --- Lista de los postes
-    Data.gForce.channel = Data.gForce.channel or {}
-    Data.channel = Data.gForce.channel
+    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Canales
+    Data.gForce.channels = Data.gForce.channels or {}
+    Data.channels = Data.gForce.channels
+
+    --- Antenas
+    Data.gForce.nodes = Data.gForce.nodes or {}
+    Data.nodes = Data.gForce.nodes
+
+    -- --- Auxiliar
+    -- Data.gForce.ghosts = Data.gForce.ghosts or {}
+    -- Data.ghosts = Data.gForce.ghosts
+
+    --- Cargar el nodo a tratar
+    if Data.Entity or Data.GUI then
+        local Entity = Data.Entity or Data.GUI.entity
+        Data.node = GPrefix.get_table(Data.nodes, "entity", Entity)
+    end
 
     --- Devolver el consolidado de los datos
     return Data
