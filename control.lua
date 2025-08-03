@@ -176,12 +176,11 @@ function This_MOD.toggle_gui(Data)
         ---> Canal por defecto
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        if not Data.channels[1] then
-            Data.channels[1] = {
-                index = 1,
-                name = "[img=virtual-signal.signal-0]",
-                link_id = 0
-            }
+        if #Data.channels == 0 then
+            local Entity = Data.Entity
+            Data.Entity = { link_id = 0 }
+            This_MOD.get_channel(Data)
+            Data.Entity = Entity
         end
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -192,7 +191,7 @@ function This_MOD.toggle_gui(Data)
         ---> Canal del cofre
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-        This_MOD.get_channel(Data, nil)
+        This_MOD.get_channel(Data)
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -269,11 +268,11 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.frame_old_channel.style = Prefix .. "frame_body"
 
         --- Barra de movimiento
-        Data.GUI.dropdown_channel = {}
-        Data.GUI.dropdown_channel.type = "drop-down"
-        Data.GUI.dropdown_channel.name = "drop_down_channel"
-        Data.GUI.dropdown_channel = Data.GUI.frame_old_channel.add(Data.GUI.dropdown_channel)
-        Data.GUI.dropdown_channel.style = Prefix .. "drop_down_channel"
+        Data.GUI.dropdown_channels = {}
+        Data.GUI.dropdown_channels.type = "drop-down"
+        Data.GUI.dropdown_channels.name = "drop_down_channel"
+        Data.GUI.dropdown_channels = Data.GUI.frame_old_channel.add(Data.GUI.dropdown_channels)
+        Data.GUI.dropdown_channels.style = Prefix .. "drop_down_channel"
 
         --- Botón para aplicar los cambios
         Data.GUI.button_edit = {}
@@ -355,13 +354,13 @@ function This_MOD.toggle_gui(Data)
 
         --- Cargar los canales
         local Dropdown = Data.GUI.dropdown_channels
-        for _, channel in pairs(Data.channel) do
-            Dropdown.add_item(channel)
+        for _, channel in pairs(Data.channels) do
+            Dropdown.add_item(channel.name)
         end
         Dropdown.add_item(This_MOD.new_channel)
 
         --- Seleccionar el canal actual
-        Dropdown.selected_index = Data.node.channel.index
+        Dropdown.selected_index = This_MOD.get_channel(Data).index
 
         --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
@@ -385,7 +384,7 @@ function This_MOD.selection_channel(Data)
     --- Validación
     if not Data.GUI.frame_up then return end
     local Element = Data.Event.element
-    local Channels = Data.GUI.dropdown_channel
+    local Channels = Data.GUI.dropdown_channels
     if Element and Element ~= Channels then return end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -580,7 +579,7 @@ function This_MOD.show_new_channel(Data)
 
     --- Configuración para editar el nombre
     if Data.GUI.action == This_MOD.action.edit then
-        local Channels = Data.GUI.dropdown_channel
+        local Channels = Data.GUI.dropdown_channels
         local Text = Data.GUI.textfield_new_channel
         Text.text = Channels.get_item(Channels.selected_index)
         Data.GUI.selected_index = GPrefix.get_key(Data.channel, Text.text)
@@ -610,7 +609,7 @@ function This_MOD.check_channel()
                 if Data.GUI.action then break end
 
                 --- Valores a evaluar
-                local Channel_index = Data.GUI.dropdown_channel.selected_index
+                local Channel_index = Data.GUI.dropdown_channels.selected_index
                 local Chest_index = This_MOD.get_index_of_link_id(Data)
 
                 --- Validar cambio
@@ -637,21 +636,11 @@ end
 ---------------------------------------------------------------------------------------------------
 
 --- Obtener un canal
-function This_MOD.get_channel(Data, channel)
+function This_MOD.get_channel(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Valores de busqueda
-    local Key, Value
-    if not channel then
-        Key = "link_id"
-        Value = Data.Entity.link_id
-    else
-        Key = "name"
-        Value = channel
-    end
-
     --- Cargar el canal indicado
-    local Channel = GPrefix.get_table(Data.channels, Key, Value)
+    local Channel = GPrefix.get_table(Data.channels, "link_id", Data.Entity.link_id)
     if Channel then return Channel end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -663,14 +652,10 @@ function This_MOD.get_channel(Data, channel)
     Data.channels[Channel.index] = Channel
 
     --- Nombre del canal
-    if not channel then
-        Channel.name = ""
-        local Index = tostring(Channel.index)
-        for n = 1, #Index do
-            Channel.name = Channel.name .. "[img=virtual-signal.signal-" .. Index:sub(n, n) .. "]"
-        end
-    else
-        Channel.name = channel
+    Channel.name = ""
+    local ID = tostring(Channel.link_id)
+    for n = 1, #ID do
+        Channel.name = Channel.name .. "[img=virtual-signal.signal-" .. ID:sub(n, n) .. "]"
     end
 
     --- Devolver el canal indicado
@@ -685,7 +670,7 @@ function This_MOD.get_link_id_of_index(Data)
 
     --- Variables a usar
     local Index = 0
-    local Channel_index = Data.GUI.dropdown_channel.selected_index
+    local Channel_index = Data.GUI.dropdown_channels.selected_index
 
     --- Buscar el index
     for key, _ in pairs(Data.channel) do
