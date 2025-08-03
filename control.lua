@@ -123,17 +123,17 @@ function This_MOD.create_data(event)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Canales
+    --- Canales - indexados en orden de creación
     Data.gForce.channels = Data.gForce.channels or {}
     Data.channels = Data.gForce.channels
 
-    --- Antenas
-    Data.gForce.nodes = Data.gForce.nodes or {}
-    Data.nodes = Data.gForce.nodes
+    --- Canales - indexados por el indice del enlace
+    Data.gForce.links = Data.gForce.links or {}
+    Data.links = Data.gForce.links
 
-    -- --- Auxiliar
-    -- Data.gForce.ghosts = Data.gForce.ghosts or {}
-    -- Data.ghosts = Data.gForce.ghosts
+    --- Ultimo espacio buscado
+    Data.gForce.last_value = Data.gForce.last_value or 0
+    Data.last_value = Data.gForce.last_value
 
     --- Entidad a trabajar
     if not Data.Entity then Data.Entity = Data.GUI.entity end
@@ -560,16 +560,15 @@ function This_MOD.validate_channel_name(Data)
     --- Crear un nuevo canal
     if Data.GUI.action == This_MOD.action.new_channel then
         --- Buscar un espacio libre
-        Data.gForce.last_value = Data.gForce.last_value or 0
-        while GPrefix.get_table(Data.channels, "link_id", Data.gForce.last_value) do
-            Data.gForce.last_value = Data.gForce.last_value + 1
+        while Data.links[Data.last_value] do
+            Data.last_value = Data.last_value + 1
         end
 
         --- Agregar el nuevo nombre a la GUI
         Dropdown.add_item(Textbox.text, Index)
 
         --- Cambiar el indicador
-        Data.Entity.link_id = Data.gForce.last_value
+        Data.Entity.link_id = Data.last_value
 
         --- Efecto de sonido
         This_MOD.sound_channel_changed(Data)
@@ -663,6 +662,8 @@ function This_MOD.get_channel(Data)
     Channel = {}
     Channel.index = #Data.channels + 1
     Channel.link_id = Data.Entity.link_id
+
+    Data.links[Channel.link_id] = Channel
     Data.channels[Channel.index] = Channel
 
     --- Nombre del canal
