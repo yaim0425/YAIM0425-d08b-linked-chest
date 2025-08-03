@@ -553,24 +553,37 @@ function This_MOD.validate_channel_name(Data)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+    --- Renombrar
+    local Dropdown = Data.GUI.dropdown_channels
+    local Index = Dropdown.selected_index
+
     --- Crear un nuevo canal
     if Data.GUI.action == This_MOD.action.new_channel then
+        --- Buscar un espacio libre
+        Data.gForce.last_value = Data.gForce.last_value or 0
+        while GPrefix.get_table(Data.channels, "link_id", Data.gForce.last_value) do
+            Data.gForce.last_value = Data.gForce.last_value + 1
+        end
+
+        --- Agregar el nuevo canal
+        Data.Entity.link_id = Data.gForce.last_value
+        Dropdown.add_item(Textbox.text, Index)
+
         This_MOD.sound_channel_changed(Data)
     end
 
     --- Cambiar el nombre de un canal
     if Data.GUI.action == This_MOD.action.edit then
-        local Dropdown = Data.GUI.dropdown_channels
-        local Index = Dropdown.selected_index
-
+        --- Cambiar el nombre en la GUI
         Dropdown.remove_item(Index)
         Dropdown.add_item(Textbox.text, Index)
 
         This_MOD.sound_good(Data)
     end
 
-    --- Actualizar la información
+    --- Actualizar el nombre
     This_MOD.get_channel(Data).name = Textbox.text
+
     This_MOD.show_old_channel(Data)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- ---
