@@ -209,6 +209,7 @@ function This_MOD.create_tech(space, new_recipe)
     --- Preprar la nueva tecnología
     local Tech = util.copy(space.tech)
     Tech.prerequisites = { Tech.name }
+    Tech.localised_description = nil
     Tech.name = Tech_name
     Tech.effects = { {
         type = "unlock-recipe",
