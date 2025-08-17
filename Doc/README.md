@@ -34,11 +34,11 @@ Los nombres son **editables**, pero una vez creado un canal no se podrá elimina
 
 ## 🖼️ Capturas
 
-![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/Screenshot%20(1).png)  
-![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/Screenshot%20(2).png)  
-![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/Screenshot%20(3).png)  
-![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/Screenshot%20(4).png)  
-![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/Screenshot%20(5).png)  
-![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/Screenshot%20(6).png)  
-![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/Screenshot%20(7).png)  
-![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/Screenshot%20(8).png)
+![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/(1).png)  
+![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/(2).png)  
+![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/(3).png)  
+![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/(4).png)  
+![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/(5).png)  
+![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/(6).png)  
+![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/(7).png)  
+![](https://raw.githubusercontent.com/yaim0425/zzzYAIM0425-0800-linked-chest/main/Doc/base/(8).png)
