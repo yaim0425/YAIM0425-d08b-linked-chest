@@ -33,19 +33,19 @@ function This_MOD.start()
     --- Obtener los elementos
     This_MOD.get_elements()
 
-    -- --- Modificar los elementos
-    -- for _, spaces in pairs(This_MOD.to_be_processed) do
-    --     for _, space in pairs(spaces) do
-    --         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Modificar los elementos
+    for _, spaces in pairs(This_MOD.to_be_processed) do
+        for _, space in pairs(spaces) do
+            --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --         --- Crear los elementos
-    --         This_MOD.create_item(space)
-    --         This_MOD.create_entity(space)
-    --         This_MOD.create_recipe(space)
+            --- Crear los elementos
+            This_MOD.create_item(space)
+            This_MOD.create_entity(space)
+            -- This_MOD.create_recipe(space)
 
-    --         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    --     end
-    -- end
+            --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        end
+    end
 
     --- Valores a usar en control.lua
     This_MOD.load_styles()
@@ -102,7 +102,6 @@ function This_MOD.setting_mod()
     --- Valores de referencia
     This_MOD.old_entity_name = "linked-chest"
     This_MOD.new_entity_name = This_MOD.prefix .. "linked-chest"
-    This_MOD.new_localised_name = { "", { "entity-name." .. This_MOD.old_entity_name } }
 
     --- Rutas de los recursos
     This_MOD.path_graphics = "__" .. This_MOD.prefix .. This_MOD.name .. "__/graphics/"
@@ -187,6 +186,219 @@ function This_MOD.get_elements()
 
     This_MOD.to_be_processed["linked-container"] = This_MOD.to_be_processed["linked-container"] or {}
     This_MOD.to_be_processed["linked-container"][Space.name] = Space
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+---------------------------------------------------------------------------
+
+function This_MOD.create_item(space)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Validación
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    if not space.item then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Duplicar el elemento
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    local Item = GMOD.copy(space.item)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Cambiar algunas propiedades
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Nombre
+    Item.name = This_MOD.new_entity_name
+
+    --- Copiar los iconos del cofre
+    Item.icons = GMOD.copy(space.chest_item.icons)
+
+    --- Apodo y descripción
+    Item.localised_name = { "", { "entity-name." .. This_MOD.old_entity_name } }
+    Item.localised_description = { "", { "entity-description." .. This_MOD.old_entity_name } }
+
+    --- Actualizar el order
+    local Order = tonumber(Item.order) + 1
+    Item.order = GMOD.pad_left_zeros(#Item.order, Order)
+
+    --- Entidad a crear
+    Item.place_result = This_MOD.new_entity_name
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    ---- Crear el prototipo
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    GMOD.extend(Item)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+function This_MOD.create_entity(space)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Validación
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    if not space.entity then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Duplicar el elemento
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    local Entity = GMOD.copy(space.entity)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Cambiar algunas propiedades
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Nombre
+    Entity.name = This_MOD.new_entity_name
+
+    --- Tipo de entidad
+    Entity.type = space.chest_entity.type
+
+    --- Apodo y descripción
+    Entity.localised_name = { "", { "entity-name." .. This_MOD.old_entity_name } }
+    Entity.localised_description = { "", { "entity-description." .. This_MOD.old_entity_name } }
+
+    --- Objeto a minar
+    Entity.minable.results = { {
+        type = "item",
+        name = This_MOD.new_entity_name,
+        amount = 1
+    } }
+
+    --- Elimnar propiedades inecesarias
+    Entity.fast_replaceable_group = nil
+    Entity.next_upgrade = nil
+
+    --- Copiar los iconos del cofre
+    Entity.icons = GMOD.copy(space.item.icons)
+
+    --- Copiar la imagen del cofre
+    Entity.picture = GMOD.copy(space.chest_entity.picture)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Crear el prototipo
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    GMOD.extend(Entity)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+function This_MOD.create_recipe(space)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Validación
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    if not space.recipe then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Duplicar el elemento
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    local Recipe = GMOD.copy(space.recipe)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Cambiar algunas propiedades
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Nombre
+    Recipe.name = This_MOD.new_entity_name
+
+    --- Apodo y descripción
+    Recipe.localised_name = This_MOD.new_localised_name
+
+    --- Elimnar propiedades inecesarias
+    Recipe.main_product = nil
+
+    --- Productividad
+    Recipe.allow_productivity = true
+    Recipe.maximum_productivity = 1000000
+
+    --- Receta desbloqueada por tecnología
+    Recipe.enabled = true
+
+    --- Agregar indicador del MOD
+    Recipe.icons = GMOD.copy(space.item.icons)
+    table.insert(Recipe.icons, This_MOD.indicator_bg)
+    table.insert(Recipe.icons, This_MOD.indicator)
+
+    --- Actualizar el order
+    local Order = tonumber(Recipe.order) + 1
+    Recipe.order = GMOD.pad_left_zeros(#Recipe.order, Order)
+
+    --- Ingredientes
+    Recipe.ingredients = {}
+
+    --- Resultados
+    Recipe.results = { {
+        type = "item",
+        name = This_MOD.new_entity_name,
+        amount = 1
+    } }
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    ---- Crear el prototipo
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    GMOD.extend(Recipe)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
