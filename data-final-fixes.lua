@@ -42,6 +42,7 @@ function This_MOD.start()
             This_MOD.create_item(space)
             This_MOD.create_entity(space)
             This_MOD.create_recipe(space)
+            This_MOD.create_tech(space)
 
             --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
         end
@@ -391,6 +392,97 @@ function This_MOD.create_recipe(space)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     GMOD.extend(Recipe)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
+
+function This_MOD.create_tech(space)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Validación
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    if not space.tech then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Validación
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Nombre a usar
+    local Name = This_MOD.new_entity_name .. "-tech"
+
+    --- Renombrar
+    local Tech = data.raw.technology[Name]
+
+    --- Existe
+    if Tech then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Duplicar el elemento
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    Tech = GMOD.copy(space.tech)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Cambiar algunas propiedades
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Nombre
+    Tech.name = Name
+
+    --- Apodo y descripción
+    Tech.localised_name = { "", { "entity-name." .. This_MOD.old_entity_name } }
+    Tech.localised_description = { "" }
+
+    --- Cambiar icono
+    Tech.icons = GMOD.copy(space.chest_item.icons)
+
+    --- Tech previas
+    Tech.prerequisites = { space.tech.name }
+
+    --- Efecto de la tech
+    Tech.effects = { {
+        type = "unlock-recipe",
+        recipe = This_MOD.new_entity_name
+    } }
+
+    --- Tech se activa con una fabricación
+    if Tech.research_trigger then
+        Tech.research_trigger = {
+            type = "craft-item",
+            item = space.item.name,
+            count = 1
+        }
+    end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Crear el prototipo
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    GMOD.extend(Tech)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
