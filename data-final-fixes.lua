@@ -41,7 +41,7 @@ function This_MOD.start()
             --- Crear los elementos
             This_MOD.create_item(space)
             This_MOD.create_entity(space)
-            -- This_MOD.create_recipe(space)
+            This_MOD.create_recipe(space)
 
             --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
         end
@@ -357,29 +357,21 @@ function This_MOD.create_recipe(space)
     Recipe.name = This_MOD.new_entity_name
 
     --- Apodo y descripción
-    Recipe.localised_name = This_MOD.new_localised_name
+    Recipe.localised_name = { "", { "entity-name." .. This_MOD.old_entity_name } }
+    Recipe.localised_description = { "", { "entity-description." .. This_MOD.old_entity_name } }
 
     --- Elimnar propiedades inecesarias
     Recipe.main_product = nil
 
-    --- Productividad
-    Recipe.allow_productivity = true
-    Recipe.maximum_productivity = 1000000
-
     --- Receta desbloqueada por tecnología
-    Recipe.enabled = true
+    Recipe.enabled = space.tech == nil
 
     --- Agregar indicador del MOD
-    Recipe.icons = GMOD.copy(space.item.icons)
-    table.insert(Recipe.icons, This_MOD.indicator_bg)
-    table.insert(Recipe.icons, This_MOD.indicator)
+    Recipe.icons = GMOD.copy(space.chest_item.icons)
 
     --- Actualizar el order
     local Order = tonumber(Recipe.order) + 1
     Recipe.order = GMOD.pad_left_zeros(#Recipe.order, Order)
-
-    --- Ingredientes
-    Recipe.ingredients = {}
 
     --- Resultados
     Recipe.results = { {
