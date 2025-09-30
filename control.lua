@@ -662,13 +662,9 @@ function This_MOD.create_data(event)
     Data.gForce.channels = Data.gForce.channels or {}
     Data.channels = Data.gForce.channels
 
-    --- Canales - indexados por el indice del enlace
-    Data.gForce.links = Data.gForce.links or {}
-    Data.links = Data.gForce.links
-
-    --- Ultimo espacio buscado
-    Data.gForce.last_value = Data.gForce.last_value or 0
-    Data.last_value = Data.gForce.last_value
+    --- Ultimo id buscado para un canal
+    Data.channels.last_link_id = Data.channels.last_link_id or 0
+    Data.last_link_id = Data.channels.last_link_id
 
     --- Entidad a trabajar
     if not Data.Entity then Data.Entity = Data.GUI.entity end
@@ -704,7 +700,6 @@ function This_MOD.get_channel(Data)
     Channel.index = #Data.channels + 1
     Channel.link_id = Data.Entity.link_id
 
-    Data.links[Channel.link_id] = Channel
     Data.channels[Channel.index] = Channel
 
     --- Nombre del canal
