@@ -1,25 +1,44 @@
-if true then return end
 ---------------------------------------------------------------------------
----> control.lua <---
----------------------------------------------------------------------------
-
---- Contenedor de funciones y datos usados
---- unicamente en este archivo
-local This_MOD = {}
-
+---[ control.lua ]---
 ---------------------------------------------------------------------------
 
---- Cargar las funciones
-require("__zzzYAIM0425-0000-lib__/control")
 
+
+
+
+---------------------------------------------------------------------------
+---[ Cargar las funciones comunes ]---
+---------------------------------------------------------------------------
+
+require("__" .. "YAIM0425-d00b-core" .. "__/control")
+
+---------------------------------------------------------------------------
+
+
+
+
+
+---------------------------------------------------------------------------
+---[ Contenedor de este archivo ]---
+---------------------------------------------------------------------------
+
+local This_MOD = GMOD.get_id_and_name()
+if not This_MOD then return end
+GMOD[This_MOD.id] = This_MOD
+
+---------------------------------------------------------------------------
+
+
+
+
+
+---------------------------------------------------------------------------
+---[ Inicio del MOD ]---
 ---------------------------------------------------------------------------
 
 --- Iniciar el modulo
 function This_MOD.start()
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Obtener información desde el nombre de MOD
-    GPrefix.split_name_folder(This_MOD)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Valores de la referencia
     This_MOD.setting_mod()
@@ -27,19 +46,21 @@ function This_MOD.start()
     --- Cambiar la propiedad necesaria
     This_MOD.load_events()
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
+---------------------------------------------------------------------------
+
+
+
+
+
+---------------------------------------------------------------------------
+---[ Valores de la referencia ]---
+---------------------------------------------------------------------------
 
 --- Valores de la referencia
 function This_MOD.setting_mod()
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Información de referencia
-    This_MOD.ref = {}
-    This_MOD.ref.name = This_MOD.prefix .. "linked-chest"
-    This_MOD.ref.entity = prototypes.entity[This_MOD.ref.name]
-    This_MOD.ref.recipe = prototypes.recipe[This_MOD.ref.name]
-    This_MOD.ref.item = prototypes.item[This_MOD.ref.name]
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Valores propios
     This_MOD.new_channel = { This_MOD.prefix .. "new-channel" }
@@ -50,12 +71,21 @@ function This_MOD.setting_mod()
     This_MOD.action.edit = 1
     This_MOD.action.new_channel = 2
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
---- Cargar los eventos a ejecutar
+---------------------------------------------------------------------------
+
+
+
+
+
+---------------------------------------------------------------------------
+---[ Eventos programados ]---
+---------------------------------------------------------------------------
+
 function This_MOD.load_events()
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Al crear la entidad
     script.on_event({
@@ -68,109 +98,65 @@ function This_MOD.load_events()
         This_MOD.create_entity(This_MOD.create_data(event))
     end)
 
-    --- Abrir o cerrar la interfaz
-    script.on_event({
-        defines.events.on_gui_opened,
-        defines.events.on_gui_closed
-    }, function(event)
-        This_MOD.toggle_gui(This_MOD.create_data(event))
-    end)
+    -- --- Abrir o cerrar la interfaz
+    -- script.on_event({
+    --     defines.events.on_gui_opened,
+    --     defines.events.on_gui_closed
+    -- }, function(event)
+    --     This_MOD.toggle_gui(This_MOD.create_data(event))
+    -- end)
 
-    --- Al seleccionar otro canal
-    script.on_event({
-        defines.events.on_gui_selection_state_changed
-    }, function(event)
-        This_MOD.selection_channel(This_MOD.create_data(event))
-    end)
+    -- --- Al seleccionar otro canal
+    -- script.on_event({
+    --     defines.events.on_gui_selection_state_changed
+    -- }, function(event)
+    --     This_MOD.selection_channel(This_MOD.create_data(event))
+    -- end)
 
-    --- Al hacer clic en algún elemento de la ventana
-    script.on_event({
-        defines.events.on_gui_click
-    }, function(event)
-        This_MOD.button_action(This_MOD.create_data(event))
-    end)
+    -- --- Al hacer clic en algún elemento de la ventana
+    -- script.on_event({
+    --     defines.events.on_gui_click
+    -- }, function(event)
+    --     This_MOD.button_action(This_MOD.create_data(event))
+    -- end)
 
-    --- Al seleccionar o deseleccionar un icon
-    script.on_event({
-        defines.events.on_gui_elem_changed
-    }, function(event)
-        This_MOD.add_icon(This_MOD.create_data(event))
-    end)
+    -- --- Al seleccionar o deseleccionar un icon
+    -- script.on_event({
+    --     defines.events.on_gui_elem_changed
+    -- }, function(event)
+    --     This_MOD.add_icon(This_MOD.create_data(event))
+    -- end)
 
-    --- Al presionar ENTER
-    script.on_event({
-        defines.events.on_gui_confirmed
-    }, function(event)
-        This_MOD.validate_channel_name(This_MOD.Create_data(event))
-    end)
+    -- --- Al presionar ENTER
+    -- script.on_event({
+    --     defines.events.on_gui_confirmed
+    -- }, function(event)
+    --     This_MOD.validate_channel_name(This_MOD.Create_data(event))
+    -- end)
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
----------------------------------------------------------------------------
-
---- Crea y agrupar las variables a usar
-function This_MOD.create_data(event)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Consolidar la información
-    local Data = GPrefix.create_data(event or {}, This_MOD)
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Validación
-    if not Data.gForce then return Data end
-    if not event then return Data end
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
-    --- Canales - indexados en orden de creación
-    Data.gForce.channels = Data.gForce.channels or {}
-    Data.channels = Data.gForce.channels
-
-    --- Canales - indexados por el indice del enlace
-    Data.gForce.links = Data.gForce.links or {}
-    Data.links = Data.gForce.links
-
-    --- Ultimo espacio buscado
-    Data.gForce.last_value = Data.gForce.last_value or 0
-    Data.last_value = Data.gForce.last_value
-
-    --- Entidad a trabajar
-    if not Data.Entity then Data.Entity = Data.GUI.entity end
-
-    --- Devolver el consolidado de los datos
-    return Data
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-end
-
----------------------------------------------------------------------------
-
-
-
-
-
----------------------------------------------------------------------------
----> Acciones por eventos
 ---------------------------------------------------------------------------
 
 --- Al crear la entidad
 function This_MOD.create_entity(Data)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Validación
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     if not Data.Entity then return end
-    if not GPrefix.has_id(Data.Entity.name, This_MOD.id) then return end
+    if not GMOD.has_id(Data.Entity.name, This_MOD.id) then return end
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
 
-    --- --- --- --- --- --- --- --- --- --- --- --- ---
-    ---> Canal por defecto
-    --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Canal por defecto
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     if #Data.channels == 0 then
         local Entity = Data.Entity
@@ -179,28 +165,20 @@ function This_MOD.create_entity(Data)
         Data.Entity = Entity
     end
 
-    --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
 
-    --- --- --- --- --- --- --- --- --- --- --- --- ---
-    ---> Canal del cofre
-    --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Canal del cofre
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     This_MOD.get_channel(Data)
-
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+GMOD.var_dump(Data)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
-
----------------------------------------------------------------------------
-
-
-
-
-
----------------------------------------------------------------------------
----> Acciones en el GUI
----------------------------------------------------------------------------
 
 --- Crear o destruir el indicador
 function This_MOD.toggle_gui(Data)
@@ -646,18 +624,80 @@ end
 
 
 ---------------------------------------------------------------------------
----> Funciones de apoyo
+---[ Funciones de apoyo ]---
 ---------------------------------------------------------------------------
+
+--- Crea y agrupar las variables a usar en el MOD
+function This_MOD.create_data(event)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Consolidar la información
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    local Data = GMOD.create_data(event or {}, This_MOD)
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Validación
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    if not Data.gForce then return Data end
+    if not event then return Data end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Variables propias
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    --- Canales - indexados en orden de creación
+    Data.gForce.channels = Data.gForce.channels or {}
+    Data.channels = Data.gForce.channels
+
+    --- Canales - indexados por el indice del enlace
+    Data.gForce.links = Data.gForce.links or {}
+    Data.links = Data.gForce.links
+
+    --- Ultimo espacio buscado
+    Data.gForce.last_value = Data.gForce.last_value or 0
+    Data.last_value = Data.gForce.last_value
+
+    --- Entidad a trabajar
+    if not Data.Entity then Data.Entity = Data.GUI.entity end
+
+    --- Devolver el consolidado de los datos
+    return Data
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+end
 
 --- Obtener un canal
 function This_MOD.get_channel(Data)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Validación
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Cargar el canal indicado
-    local Channel = GPrefix.get_table(Data.channels, "link_id", Data.Entity.link_id)
+    local Channel = GMOD.get_tables(Data.channels, "link_id", Data.Entity.link_id)
     if Channel then return Channel end
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Crear un nuevo canal
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Guardar el nuevo canal
     Channel = {}
@@ -677,7 +717,7 @@ function This_MOD.get_channel(Data)
     --- Devolver el canal indicado
     return Channel
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 ---------------------------------------------------------------------------
@@ -709,8 +749,9 @@ end
 
 
 ---------------------------------------------------------------------------
+---[ Iniciar el MOD ]---
+---------------------------------------------------------------------------
 
---- Iniciar el modulo
 This_MOD.start()
 
 ---------------------------------------------------------------------------
