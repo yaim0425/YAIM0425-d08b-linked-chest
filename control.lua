@@ -48,6 +48,7 @@ function This_MOD.start()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
+
 ---------------------------------------------------------------------------
 
 
@@ -98,13 +99,13 @@ function This_MOD.load_events()
         This_MOD.create_entity(This_MOD.create_data(event))
     end)
 
-    -- --- Abrir o cerrar la interfaz
-    -- script.on_event({
-    --     defines.events.on_gui_opened,
-    --     defines.events.on_gui_closed
-    -- }, function(event)
-    --     This_MOD.toggle_gui(This_MOD.create_data(event))
-    -- end)
+    --- Abrir o cerrar la interfaz
+    script.on_event({
+        defines.events.on_gui_opened,
+        defines.events.on_gui_closed
+    }, function(event)
+        This_MOD.toggle_gui(This_MOD.create_data(event))
+    end)
 
     -- --- Al seleccionar otro canal
     -- script.on_event({
@@ -176,94 +177,101 @@ function This_MOD.create_entity(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     This_MOD.get_channel(Data)
-GMOD.var_dump(Data)
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 --- Crear o destruir el indicador
 function This_MOD.toggle_gui(Data)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     local function validate_close()
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
-        ---> Validación
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Validación
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         if not Data.GUI.frame_main then return false end
         if not Data.Entity then return false end
         if not Data.Entity.valid then return false end
-        if Data.Entity.name ~= This_MOD.ref.name then return false end
+        if not GMOD.has_id(Data.Entity.name, This_MOD.id) then return false end
 
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
-        ---> Aprovado
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Aprovado
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         return true
 
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
 
     local function validate_open()
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
-        ---> Validación
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Validación
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         if Data.GUI.frame_main then return false end
         if not Data.Entity then return false end
         if not Data.Entity.valid then return false end
-        if not GPrefix.has_id(Data.Entity.name, This_MOD.id) then return false end
+        if not GMOD.has_id(Data.Entity.name, This_MOD.id) then return false end
 
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
 
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
         --- Garantizar la creación del canal
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         This_MOD.create_entity(Data)
 
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
 
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
-        ---> Aprovado
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Aprovado
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         return true
 
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     local function gui_destroy()
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         Data.GUI.frame_main.destroy()
-        Data.GPlayer.GUI = {}
-        Data.GUI = Data.GPlayer.GUI
+        Data.gPlayer.GUI = {}
+        Data.GUI = Data.gPlayer.GUI
 
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
 
     local function gui_build()
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
-
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
         --- Cambiar los guiones del nombre
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
         local Prefix = string.gsub(This_MOD.prefix, "%-", "_")
 
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
 
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
         --- Crear el cuadro principal
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
         Data.GUI.frame_main = {}
         Data.GUI.frame_main.type = "frame"
         Data.GUI.frame_main.name = "frame_main"
@@ -274,11 +282,15 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.frame_main = Data.Player.gui.relative.add(Data.GUI.frame_main)
         Data.GUI.frame_main.style = "frame"
 
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
 
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Contenedor para el actual canal
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Efecto de profundidad
         Data.GUI.frame_old_channel = {}
@@ -304,11 +316,15 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.button_edit = Data.GUI.frame_old_channel.add(Data.GUI.button_edit)
         Data.GUI.button_edit.style = Prefix .. "button_blue"
 
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
 
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Contenedor para el nuevo canal
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Efecto de profundidad
         Data.GUI.frame_new_channel = {}
@@ -332,7 +348,7 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.button_icon.type = "choose-elem-button"
         Data.GUI.button_icon.name = "button_icon"
         Data.GUI.button_icon.elem_type = "signal"
-        Data.GUI.button_icon.signal = { type = "virtual", name = GPrefix.name .. "-icon" }
+        Data.GUI.button_icon.signal = { type = "virtual", name = GMOD.name .. "-icon" }
         Data.GUI.button_icon = Data.GUI.frame_new_channel.add(Data.GUI.button_icon)
         Data.GUI.button_icon.style = Prefix .. "button"
 
@@ -354,14 +370,14 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.button_confirm = Data.GUI.frame_new_channel.add(Data.GUI.button_confirm)
         Data.GUI.button_confirm.style = Prefix .. "button_green"
 
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Cargar los canales
     local function load_channels()
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Cargar los canales
         local Dropdown = Data.GUI.dropdown_channels
@@ -373,10 +389,10 @@ function This_MOD.toggle_gui(Data)
         --- Seleccionar el canal actual
         Dropdown.selected_index = This_MOD.get_channel(Data).index
 
-        --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Acción a ejecutar
     if validate_close() then
