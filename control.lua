@@ -382,7 +382,9 @@ function This_MOD.toggle_gui(Data)
         --- Cargar los canales
         local Dropdown = Data.GUI.dropdown_channels
         for _, channel in pairs(Data.channels) do
-            Dropdown.add_item(channel.name)
+            if type(channel) == "table" then
+                Dropdown.add_item(channel.name)
+            end
         end
         Dropdown.add_item(This_MOD.new_channel)
 
@@ -699,7 +701,7 @@ function This_MOD.get_channel(Data)
 
     --- Cargar el canal indicado
     local Channel = GMOD.get_tables(Data.channels, "link_id", Data.Entity.link_id)
-    if Channel then return Channel end
+    if Channel then return Channel[1] end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
