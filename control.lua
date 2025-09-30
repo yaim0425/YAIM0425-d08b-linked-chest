@@ -85,6 +85,7 @@ end
 ---[ Eventos programados ]---
 ---------------------------------------------------------------------------
 
+--- Cargar los eventos
 function This_MOD.load_events()
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -107,12 +108,12 @@ function This_MOD.load_events()
         This_MOD.toggle_gui(This_MOD.create_data(event))
     end)
 
-    -- --- Al seleccionar otro canal
-    -- script.on_event({
-    --     defines.events.on_gui_selection_state_changed
-    -- }, function(event)
-    --     This_MOD.selection_channel(This_MOD.create_data(event))
-    -- end)
+    --- Al seleccionar otro canal
+    script.on_event({
+        defines.events.on_gui_selection_state_changed
+    }, function(event)
+        This_MOD.selection_channel(This_MOD.create_data(event))
+    end)
 
     -- --- Al hacer clic en algún elemento de la ventana
     -- script.on_event({
@@ -162,7 +163,7 @@ function This_MOD.create_entity(Data)
     if #Data.channels == 0 then
         local Entity = Data.Entity
         Data.Entity = { link_id = 0 }
-        This_MOD.get_channel(Data)
+        This_MOD.get_channel(Data).name = "[img=virtual-signal.signal-0]"
         Data.Entity = Entity
     end
 
@@ -408,21 +409,27 @@ end
 
 --- Al seleccionar un canal
 function This_MOD.selection_channel(Data)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Validación
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     if not Data.GUI.frame_main then return end
     local Element = Data.Event.element
-    local Channels = Data.GUI.dropdown_channels
-    if Element and Element ~= Channels then return end
+    local Dropdown = Data.GUI.dropdown_channels
+    if Element and Element ~= Dropdown then return end
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Selección actul
-    local Index = Channels.selected_index
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Selección actual
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Se quiere crear un nuevo canal
-    if Index == #Channels.items then
+    if Dropdown.selected_index == #Dropdown.items then
         Data.GUI.action = This_MOD.action.new_channel
         This_MOD.show_new_channel(Data)
         This_MOD.sound_channel_selected(Data)
@@ -430,10 +437,10 @@ function This_MOD.selection_channel(Data)
     end
 
     --- Cambiar el canal del cofre
-    Data.Entity.link_id = Data.channels[Index].link_id
+    Data.Entity.link_id = Data.channels[Dropdown.selected_index].link_id
     This_MOD.sound_channel_changed(Data)
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 --- Acciones de los botones
@@ -610,7 +617,7 @@ end
 
 --- Mostrar el cuerpo para crear un nuevo canal
 function This_MOD.show_new_channel(Data)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Cambiar de frame
     Data.GUI.frame_old_channel.visible = false
@@ -632,7 +639,7 @@ function This_MOD.show_new_channel(Data)
     --- Enfocar nombre
     Data.GUI.textfield_new_channel.focus()
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 ---------------------------------------------------------------------------
@@ -713,19 +720,14 @@ function This_MOD.get_channel(Data)
     --- Crear un nuevo canal
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Guardar el nuevo canal
+    --- Nuevo canal
     Channel = {}
+    Channel.name = ""
     Channel.index = #Data.channels + 1
     Channel.link_id = Data.Entity.link_id
 
+    --- Guardar el nuevo canal
     Data.channels[Channel.index] = Channel
-
-    --- Nombre del canal
-    Channel.name = ""
-    local ID = tostring(Channel.link_id)
-    for n = 1, #ID do
-        Channel.name = Channel.name .. "[img=virtual-signal.signal-" .. ID:sub(n, n) .. "]"
-    end
 
     --- Devolver el canal indicado
     return Channel
