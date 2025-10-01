@@ -115,12 +115,12 @@ function This_MOD.load_events()
         This_MOD.selection_channel(This_MOD.create_data(event))
     end)
 
-    -- --- Al hacer clic en algún elemento de la ventana
-    -- script.on_event({
-    --     defines.events.on_gui_click
-    -- }, function(event)
-    --     This_MOD.button_action(This_MOD.create_data(event))
-    -- end)
+    --- Al hacer clic en algún elemento de la ventana
+    script.on_event({
+        defines.events.on_gui_click
+    }, function(event)
+        This_MOD.button_action(This_MOD.create_data(event))
+    end)
 
     --- Al seleccionar o deseleccionar un icon
     script.on_event({
@@ -445,12 +445,21 @@ end
 
 --- Acciones de los botones
 function This_MOD.button_action(Data)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Validación
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Validar el elemento
     if not Data.GUI.frame_main then return end
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Acción a ejecutar
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Cancelar el cambio de nombre o el nuevo canal
     if Data.Event.element == Data.GUI.button_cancel then
@@ -471,7 +480,7 @@ function This_MOD.button_action(Data)
         return
     end
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 --- Seleccionar un nuevo objeto
@@ -639,20 +648,20 @@ end
 
 --- Mostrar el cuerpo para seleccionar un canal
 function This_MOD.show_old_channel(Data)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Cambiar de frame
     Data.GUI.frame_new_channel.visible = false
     Data.GUI.frame_old_channel.visible = true
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Enfocar la selección
     Data.GUI.dropdown_channels.selected_index = This_MOD.get_channel(Data).index
     This_MOD.selection_channel(Data)
     Data.GUI.action = nil
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 --- Mostrar el cuerpo para crear un nuevo canal
@@ -662,6 +671,8 @@ function This_MOD.show_new_channel(Data)
     --- Cambiar de frame
     Data.GUI.frame_old_channel.visible = false
     Data.GUI.frame_new_channel.visible = true
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Configuración para un nuevo canal
     if Data.GUI.action == This_MOD.action.new_channel then
