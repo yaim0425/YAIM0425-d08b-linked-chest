@@ -129,12 +129,12 @@ function This_MOD.load_events()
         This_MOD.add_icon(This_MOD.create_data(event))
     end)
 
-    -- --- Al presionar ENTER
-    -- script.on_event({
-    --     defines.events.on_gui_confirmed
-    -- }, function(event)
-    --     This_MOD.validate_channel_name(This_MOD.Create_data(event))
-    -- end)
+    --- Al presionar ENTER
+    script.on_event({
+        defines.events.on_gui_confirmed
+    }, function(event)
+        This_MOD.validate_channel_name(This_MOD.Create_data(event))
+    end)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
@@ -588,44 +588,60 @@ end
 
 --- Validar el nombre del canal
 function This_MOD.validate_channel_name(Data)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Renombrar
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Texto a evaluar
     local Textbox = Data.GUI.textfield_new_channel
+    local Dropdown = Data.GUI.dropdown_channels
+    local Index = Dropdown.selected_index
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Validación
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     local Flag = Textbox.text == ""
-    Flag = Flag or GPrefix.get_table(Data.channels, "name", Textbox.text)
+    Flag = Flag or GMOD.get_tables(Data.channels, "name", Textbox.text)
     if Flag then
         This_MOD.sound_bad(Data)
         Textbox.focus()
         return
     end
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Renombrar
-    local Dropdown = Data.GUI.dropdown_channels
-    local Index = Dropdown.selected_index
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Acción a ejecutar
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Crear un nuevo canal
     if Data.GUI.action == This_MOD.action.new_channel then
         --- Buscar un espacio libre
-        while Data.links[Data.last_value] do
-            Data.last_value = Data.last_value + 1
+        while GMOD.get_tables(Data.channels, "link_id", Data.last_link_id) do
+            Data.last_link_id = Data.last_link_id + 1
         end
 
         --- Agregar el nuevo nombre a la GUI
         Dropdown.add_item(Textbox.text, Index)
 
         --- Cambiar el indicador
-        Data.Entity.link_id = Data.last_value
+        Data.Entity.link_id = Data.last_link_id
 
         --- Efecto de sonido
         This_MOD.sound_channel_changed(Data)
     end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Cambiar el nombre de un canal
     if Data.GUI.action == This_MOD.action.edit then
@@ -637,11 +653,13 @@ function This_MOD.validate_channel_name(Data)
         This_MOD.sound_good(Data)
     end
 
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     --- Actualizar el nombre
     This_MOD.get_channel(Data).name = Textbox.text
     This_MOD.show_old_channel(Data)
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 ---------------------------------------------------------------------------
