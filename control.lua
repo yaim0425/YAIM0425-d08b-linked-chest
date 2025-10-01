@@ -163,7 +163,7 @@ function This_MOD.create_entity(Data)
     if #Data.channels == 0 then
         local Entity = Data.Entity
         Data.Entity = { link_id = 0 }
-        This_MOD.get_channel(Data).name = "[img=virtual-signal.signal-0]"
+        This_MOD.get_channel(Data)
         Data.Entity = Entity
     end
 
@@ -797,6 +797,12 @@ function This_MOD.get_channel(Data)
 
     --- Guardar el nuevo canal
     Data.channels[Channel.index] = Channel
+
+    --- Convertir el id en iconos
+    local ID = tostring(Channel.link_id)
+    for n = 1, #ID do
+        Channel.name = Channel.name .. "[img=virtual-signal.signal-" .. ID:sub(n, n) .. "]"
+    end
 
     --- Devolver el canal indicado
     return Channel
