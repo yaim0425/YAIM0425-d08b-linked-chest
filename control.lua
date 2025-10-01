@@ -122,12 +122,12 @@ function This_MOD.load_events()
     --     This_MOD.button_action(This_MOD.create_data(event))
     -- end)
 
-    -- --- Al seleccionar o deseleccionar un icon
-    -- script.on_event({
-    --     defines.events.on_gui_elem_changed
-    -- }, function(event)
-    --     This_MOD.add_icon(This_MOD.create_data(event))
-    -- end)
+    --- Al seleccionar o deseleccionar un icon
+    script.on_event({
+        defines.events.on_gui_elem_changed
+    }, function(event)
+        This_MOD.add_icon(This_MOD.create_data(event))
+    end)
 
     -- --- Al presionar ENTER
     -- script.on_event({
@@ -476,13 +476,20 @@ end
 
 --- Seleccionar un nuevo objeto
 function This_MOD.add_icon(Data)
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Validación
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
     if not Data.Event.element then return end
     if Data.Event.element ~= Data.GUI.button_icon then return end
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Procesar la selección
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Cargar la selección
     local Select = Data.GUI.button_icon.elem_value
@@ -490,7 +497,7 @@ function This_MOD.add_icon(Data)
     --- Restaurar el icono
     Data.GUI.button_icon.elem_value = {
         type = "virtual",
-        name = GPrefix.name .. "-icon"
+        name = GMOD.name .. "-icon"
     }
 
     --- Renombrar
@@ -502,39 +509,72 @@ function This_MOD.add_icon(Data)
         return
     end
 
-    --- Convertir seleccion en texto
-    local function signal_to_rich_text(select)
+    --- Agregar la imagen seleccionada
+    local Text = Textbox.text
+    Text = Text .. (function ()
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Variables a usar
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
         local type = ""
 
-        if not select.type then
-            if prototypes.entity[select.name] then
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Detectar el tipo de icono
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        if not Select.type then
+            if prototypes.entity[Select.name] then
                 type = "entity"
-            elseif prototypes.recipe[select.name] then
+            elseif prototypes.recipe[Select.name] then
                 type = "recipe"
-            elseif prototypes.fluid[select.name] then
+            elseif prototypes.fluid[Select.name] then
                 type = "fluid"
-            elseif prototypes.item[select.name] then
+            elseif prototypes.item[Select.name] then
                 type = "item"
             end
         end
 
-        if select.type then
-            type = select.type
-            if select.type == "virtual" then
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Ajustar el tipo de icono
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        if Select.type then
+            type = Select.type
+            if Select.type == "virtual" then
                 type = type .. "-signal"
             end
         end
 
-        return "[img=" .. type .. "." .. select.name .. "]"
-    end
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Agregar la imagen seleccionada
-    local Text = Textbox.text
-    Text = Text .. signal_to_rich_text(Select)
+
+
+
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        --- Devolver el icon en formato de texto
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+        return "[img=" .. type .. "." .. Select.name .. "]"
+
+        --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    end)()
     Textbox.text = Text
     Textbox.focus()
 
-    --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
 --- Validar el nombre del canal
