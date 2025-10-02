@@ -736,11 +736,24 @@ function This_MOD.create_data(event)
 
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Corregir la variable
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    if not Data.Entity then Data.Entity = Data.GUI.entity end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Validación
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     if not Data.gForce then return Data end
     if not event then return Data end
+    if not Data.Entity then return Data end
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -753,15 +766,13 @@ function This_MOD.create_data(event)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Canales - indexados en orden de creación
-    Data.gForce.channels = Data.gForce.channels or {}
-    Data.channels = Data.gForce.channels
+    Data.gForce[Data.Entity.name] = Data.gForce[Data.Entity.name] or {}
+    Data.gForce[Data.Entity.name].channels = Data.gForce[Data.Entity.name].channels or {}
+    Data.channels = Data.gForce[Data.Entity.name].channels
 
     --- Ultimo id buscado para un canal
     Data.channels.last_link_id = Data.channels.last_link_id or 0
     Data.last_link_id = Data.channels.last_link_id
-
-    --- Entidad a trabajar
-    if not Data.Entity then Data.Entity = Data.GUI.entity end
 
     --- Devolver el consolidado de los datos
     return Data
