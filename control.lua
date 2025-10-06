@@ -31,10 +31,14 @@ GMOD[This_MOD.id] = This_MOD
 function This_MOD.start()
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    --- Valores de la referencia
-    This_MOD.reference_values()
+    --- Validación
+    if This_MOD.setting then return end
 
-    --- Cambiar la propiedad necesaria
+    --- Valor de referencia
+    This_MOD.setting = GMOD.setting[This_MOD.id] or {}
+
+    --- Ejecución de las funciones
+    This_MOD.reference_values()
     This_MOD.load_events()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
