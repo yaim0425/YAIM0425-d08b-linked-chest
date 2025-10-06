@@ -33,15 +33,14 @@ GMOD[This_MOD.id] = This_MOD
 
 
 ---------------------------------------------------------------------------
----[ Inicio del MOD ]---
+---[ Información del MOD ]---
 ---------------------------------------------------------------------------
 
---- Iniciar el modulo
 function This_MOD.start()
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Valores de la referencia
-    This_MOD.setting_mod()
+    This_MOD.reference_values()
 
     --- Cambiar la propiedad necesaria
     This_MOD.load_events()
@@ -51,16 +50,7 @@ end
 
 ---------------------------------------------------------------------------
 
-
-
-
-
----------------------------------------------------------------------------
----[ Valores de la referencia ]---
----------------------------------------------------------------------------
-
---- Valores de la referencia
-function This_MOD.setting_mod()
+function This_MOD.reference_values()
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     --- Valores propios
@@ -718,7 +708,7 @@ end
 
 
 ---------------------------------------------------------------------------
----[ Funciones de apoyo ]---
+---[ Funciones auxiliares ]---
 ---------------------------------------------------------------------------
 
 --- Crea y agrupar las variables a usar en el MOD
