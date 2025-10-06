@@ -19,21 +19,13 @@ require("__" .. "YAIM0425-d00b-core" .. "__/control")
 
 
 ---------------------------------------------------------------------------
----[ Contenedor de este archivo ]---
+---[ Información del MOD ]---
 ---------------------------------------------------------------------------
 
 local This_MOD = GMOD.get_id_and_name()
 if not This_MOD then return end
 GMOD[This_MOD.id] = This_MOD
 
----------------------------------------------------------------------------
-
-
-
-
-
----------------------------------------------------------------------------
----[ Información del MOD ]---
 ---------------------------------------------------------------------------
 
 function This_MOD.start()
@@ -47,8 +39,6 @@ function This_MOD.start()
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
-
----------------------------------------------------------------------------
 
 function This_MOD.reference_values()
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -75,7 +65,6 @@ end
 ---[ Eventos programados ]---
 ---------------------------------------------------------------------------
 
---- Cargar los eventos
 function This_MOD.load_events()
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -131,7 +120,6 @@ end
 
 ---------------------------------------------------------------------------
 
---- Al crear la entidad
 function This_MOD.create_entity(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Validación
@@ -172,7 +160,6 @@ function This_MOD.create_entity(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
---- Crear o destruir el indicador
 function This_MOD.toggle_gui(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -397,7 +384,6 @@ function This_MOD.toggle_gui(Data)
     end
 end
 
---- Al seleccionar un canal
 function This_MOD.selection_channel(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Validación
@@ -433,7 +419,6 @@ function This_MOD.selection_channel(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
---- Acciones de los botones
 function This_MOD.button_action(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Validación
@@ -473,7 +458,6 @@ function This_MOD.button_action(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
---- Seleccionar un nuevo objeto
 function This_MOD.add_icon(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Validación
@@ -576,7 +560,6 @@ function This_MOD.add_icon(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
---- Validar el nombre del canal
 function This_MOD.validate_channel_name(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Renombrar
@@ -654,7 +637,6 @@ end
 
 ---------------------------------------------------------------------------
 
---- Mostrar el cuerpo para seleccionar un canal
 function This_MOD.show_old_channel(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -672,7 +654,6 @@ function This_MOD.show_old_channel(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
---- Mostrar el cuerpo para crear un nuevo canal
 function This_MOD.show_new_channel(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -711,7 +692,6 @@ end
 ---[ Funciones auxiliares ]---
 ---------------------------------------------------------------------------
 
---- Crea y agrupar las variables a usar en el MOD
 function This_MOD.create_data(event)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Consolidar la información
@@ -770,7 +750,6 @@ function This_MOD.create_data(event)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
---- Obtener un canal
 function This_MOD.get_channel(Data)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Validación
@@ -813,22 +792,18 @@ end
 
 ---------------------------------------------------------------------------
 
---- Sonido normal
 function This_MOD.sound_good(Data)
     Data.Player.play_sound({ path = "gui_tool_button" })
 end
 
---- Sonido de error
 function This_MOD.sound_bad(Data)
     Data.Player.play_sound({ path = "utility/cannot_build" })
 end
 
---- Sonido de click
 function This_MOD.sound_channel_selected(Data)
     Data.Player.play_sound({ path = "utility/gui_click" })
 end
 
---- Sonido de cambio de canal
 function This_MOD.sound_channel_changed(Data)
     Data.Player.play_sound({ path = "utility/wire_connect_pole" })
 end
