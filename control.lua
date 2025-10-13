@@ -267,34 +267,34 @@ function This_MOD.toggle_gui(Data)
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Efecto de profundidad
-        Data.GUI.frame_old_channel = {}
-        Data.GUI.frame_old_channel.type = "frame"
-        Data.GUI.frame_old_channel.name = "frame_old_channel"
-        Data.GUI.frame_old_channel.direction = "horizontal"
-        Data.GUI.frame_old_channel = Data.GUI.frame_main.add(Data.GUI.frame_old_channel)
-        Data.GUI.frame_old_channel.style = Prefix .. "frame_body"
+        Data.GUI.frame_channel_list = {}
+        Data.GUI.frame_channel_list.type = "frame"
+        Data.GUI.frame_channel_list.name = "frame_channel_list"
+        Data.GUI.frame_channel_list.direction = "horizontal"
+        Data.GUI.frame_channel_list = Data.GUI.frame_main.add(Data.GUI.frame_channel_list)
+        Data.GUI.frame_channel_list.style = Prefix .. "frame_body"
 
         --- Barra de movimiento
         Data.GUI.dropdown_channels = {}
         Data.GUI.dropdown_channels.type = "drop-down"
         Data.GUI.dropdown_channels.name = "drop_down_channels"
-        Data.GUI.dropdown_channels = Data.GUI.frame_old_channel.add(Data.GUI.dropdown_channels)
+        Data.GUI.dropdown_channels = Data.GUI.frame_channel_list.add(Data.GUI.dropdown_channels)
         Data.GUI.dropdown_channels.style = Prefix .. "drop_down_channels"
 
         --- Botón para agregar un canal
-        Data.GUI.button_plus = {}
-        Data.GUI.button_plus.type = "sprite-button"
-        Data.GUI.button_plus.name = "button_plus"
-        Data.GUI.button_plus.sprite = "virtual-signal/shape-cross"
-        Data.GUI.button_plus = Data.GUI.frame_old_channel.add(Data.GUI.button_plus)
-        Data.GUI.button_plus.style = Prefix .. "button_plus"
+        Data.GUI.button_add = {}
+        Data.GUI.button_add.type = "sprite-button"
+        Data.GUI.button_add.name = "button_add"
+        Data.GUI.button_add.sprite = "virtual-signal/shape-cross"
+        Data.GUI.button_add = Data.GUI.frame_channel_list.add(Data.GUI.button_add)
+        Data.GUI.button_add.style = Prefix .. "button_add"
 
         --- Botón para aplicar los cambios
         Data.GUI.button_edit = {}
         Data.GUI.button_edit.type = "sprite-button"
         Data.GUI.button_edit.name = "button_edit"
         Data.GUI.button_edit.sprite = "utility/rename_icon"
-        Data.GUI.button_edit = Data.GUI.frame_old_channel.add(Data.GUI.button_edit)
+        Data.GUI.button_edit = Data.GUI.frame_channel_list.add(Data.GUI.button_edit)
         Data.GUI.button_edit.style = Prefix .. "button_blue"
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -308,21 +308,21 @@ function This_MOD.toggle_gui(Data)
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Efecto de profundidad
-        Data.GUI.frame_new_channel = {}
-        Data.GUI.frame_new_channel.type = "frame"
-        Data.GUI.frame_new_channel.name = "frame_new_channels"
-        Data.GUI.frame_new_channel.direction = "horizontal"
-        Data.GUI.frame_new_channel = Data.GUI.frame_main.add(Data.GUI.frame_new_channel)
-        Data.GUI.frame_new_channel.style = Prefix .. "frame_body"
-        Data.GUI.frame_new_channel.visible = false
+        Data.GUI.frame_channel_edit = {}
+        Data.GUI.frame_channel_edit.type = "frame"
+        Data.GUI.frame_channel_edit.name = "frame_channel_edit"
+        Data.GUI.frame_channel_edit.direction = "horizontal"
+        Data.GUI.frame_channel_edit = Data.GUI.frame_main.add(Data.GUI.frame_channel_edit)
+        Data.GUI.frame_channel_edit.style = Prefix .. "frame_body"
+        Data.GUI.frame_channel_edit.visible = false
 
         --- Nuevo nombre
-        Data.GUI.textfield_new_channel = {}
-        Data.GUI.textfield_new_channel.type = "textfield"
-        Data.GUI.textfield_new_channel.name = "write-channel"
-        Data.GUI.textfield_new_channel.text = "xXx"
-        Data.GUI.textfield_new_channel = Data.GUI.frame_new_channel.add(Data.GUI.textfield_new_channel)
-        Data.GUI.textfield_new_channel.style = Prefix .. "stretchable_textfield"
+        Data.GUI.textfield_channel = {}
+        Data.GUI.textfield_channel.type = "textfield"
+        Data.GUI.textfield_channel.name = "textfield_channel"
+        Data.GUI.textfield_channel.text = "xXx"
+        Data.GUI.textfield_channel = Data.GUI.frame_channel_edit.add(Data.GUI.textfield_channel)
+        Data.GUI.textfield_channel.style = Prefix .. "stretchable_textfield"
 
         --- Crear la imagen de selección
         Data.GUI.button_icon = {}
@@ -330,7 +330,7 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.button_icon.name = "button_icon"
         Data.GUI.button_icon.elem_type = "signal"
         Data.GUI.button_icon.signal = { type = "virtual", name = GMOD.name .. "-icon" }
-        Data.GUI.button_icon = Data.GUI.frame_new_channel.add(Data.GUI.button_icon)
+        Data.GUI.button_icon = Data.GUI.frame_channel_edit.add(Data.GUI.button_icon)
         Data.GUI.button_icon.style = Prefix .. "button"
 
         --- Botón para cancelar los cambios
@@ -339,7 +339,7 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.button_cancel.name = "button_cancel"
         Data.GUI.button_cancel.sprite = "utility/close_fat"
         Data.GUI.button_cancel.tooltip = { "gui-mod-settings.cancel" }
-        Data.GUI.button_cancel = Data.GUI.frame_new_channel.add(Data.GUI.button_cancel)
+        Data.GUI.button_cancel = Data.GUI.frame_channel_edit.add(Data.GUI.button_cancel)
         Data.GUI.button_cancel.style = Prefix .. "button_red"
 
         --- Botón para aplicar los cambios
@@ -348,7 +348,7 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.button_confirm.name = "button_green"
         Data.GUI.button_confirm.sprite = "utility/check_mark_white"
         Data.GUI.button_confirm.tooltip = { "gui.confirm" }
-        Data.GUI.button_confirm = Data.GUI.frame_new_channel.add(Data.GUI.button_confirm)
+        Data.GUI.button_confirm = Data.GUI.frame_channel_edit.add(Data.GUI.button_confirm)
         Data.GUI.button_confirm.style = Prefix .. "button_green"
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -454,8 +454,8 @@ function This_MOD.button_action(Data)
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Cambiar de frame
-        Data.GUI.frame_new_channel.visible = false
-        Data.GUI.frame_old_channel.visible = true
+        Data.GUI.frame_channel_edit.visible = false
+        Data.GUI.frame_channel_list.visible = true
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
         return
@@ -472,25 +472,25 @@ function This_MOD.button_action(Data)
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Cambiar de frame
-        Data.GUI.frame_old_channel.visible = false
-        Data.GUI.frame_new_channel.visible = true
+        Data.GUI.frame_channel_list.visible = false
+        Data.GUI.frame_channel_edit.visible = true
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Editar el nombre
         local Dropdown = Data.GUI.dropdown_channels
-        local Textbox = Data.GUI.textfield_new_channel
+        local Textbox = Data.GUI.textfield_channel
         Textbox.text = Data.channels[Dropdown.selected_index].name
 
         --- Enfocar nombre
-        Data.GUI.textfield_new_channel.focus()
+        Data.GUI.textfield_channel.focus()
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
         return
     end
 
     --- Crear un nuevo canal
-    if Data.Event.element == Data.GUI.button_plus then
+    if Data.Event.element == Data.GUI.button_add then
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         --- Buscar un espacio libre
@@ -540,7 +540,7 @@ function This_MOD.add_icon(Data)
     }
 
     --- Renombrar
-    local Textbox = Data.GUI.textfield_new_channel
+    local Textbox = Data.GUI.textfield_channel
 
     --- Se intentó limpiar el icono
     if not Select then
@@ -621,7 +621,7 @@ function This_MOD.edit_channel_name(Data)
     --- Renombrar
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    local Textbox = Data.GUI.textfield_new_channel
+    local Textbox = Data.GUI.textfield_channel
     local Dropdown = Data.GUI.dropdown_channels
     local Index = Dropdown.selected_index
 
@@ -649,8 +649,8 @@ function This_MOD.edit_channel_name(Data)
 
     --- No cambio de nombre
     if Channel and Channel.index == Dropdown.selected_index then
-        Data.GUI.frame_new_channel.visible = false
-        Data.GUI.frame_old_channel.visible = true
+        Data.GUI.frame_channel_edit.visible = false
+        Data.GUI.frame_channel_list.visible = true
         This_MOD.sound_good(Data)
         return
     end
@@ -677,8 +677,8 @@ function This_MOD.edit_channel_name(Data)
     This_MOD.selection_channel(Data)
 
     --- Cambiar de frame
-    Data.GUI.frame_new_channel.visible = false
-    Data.GUI.frame_old_channel.visible = true
+    Data.GUI.frame_channel_edit.visible = false
+    Data.GUI.frame_channel_list.visible = true
 
     --- Efecto de sonido
     This_MOD.sound_good(Data)
