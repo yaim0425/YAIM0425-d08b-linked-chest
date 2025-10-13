@@ -638,7 +638,7 @@ function This_MOD.edit_channel_name(Data)
 
     local Flag = Textbox.text == ""
     Flag = Flag or GMOD.get_tables(Data.channels, "name", Textbox.text)
-    if Flag then
+    if Flag and Flag[1].index ~= Dropdown.selected_index then
         This_MOD.sound_bad(Data)
         Textbox.focus()
         return
