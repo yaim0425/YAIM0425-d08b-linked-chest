@@ -334,15 +334,6 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.button_icon = Data.GUI.frame_new_channel.add(Data.GUI.button_icon)
         Data.GUI.button_icon.style = Prefix .. "button"
 
-        --- Botón para cancelar los cambios
-        Data.GUI.button_cancel = {}
-        Data.GUI.button_cancel.type = "sprite-button"
-        Data.GUI.button_cancel.name = "button_cancel"
-        Data.GUI.button_cancel.sprite = "utility/close_fat"
-        Data.GUI.button_cancel.tooltip = { "gui-mod-settings.cancel" }
-        Data.GUI.button_cancel = Data.GUI.frame_new_channel.add(Data.GUI.button_cancel)
-        Data.GUI.button_cancel.style = Prefix .. "button_red"
-
         --- Botón para aplicar los cambios
         Data.GUI.button_confirm = {}
         Data.GUI.button_confirm.type = "sprite-button"
@@ -351,6 +342,15 @@ function This_MOD.toggle_gui(Data)
         Data.GUI.button_confirm.tooltip = { "gui.confirm" }
         Data.GUI.button_confirm = Data.GUI.frame_new_channel.add(Data.GUI.button_confirm)
         Data.GUI.button_confirm.style = Prefix .. "button_green"
+
+        --- Botón para cancelar los cambios
+        Data.GUI.button_cancel = {}
+        Data.GUI.button_cancel.type = "sprite-button"
+        Data.GUI.button_cancel.name = "button_cancel"
+        Data.GUI.button_cancel.sprite = "utility/close_fat"
+        Data.GUI.button_cancel.tooltip = { "gui-mod-settings.cancel" }
+        Data.GUI.button_cancel = Data.GUI.frame_new_channel.add(Data.GUI.button_cancel)
+        Data.GUI.button_cancel.style = Prefix .. "button_red"
 
         --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     end
