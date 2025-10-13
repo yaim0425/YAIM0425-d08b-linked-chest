@@ -636,11 +636,23 @@ function This_MOD.edit_channel_name(Data)
     --- Validación
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-    local Flag = Textbox.text == ""
-    Flag = Flag or GMOD.get_tables(Data.channels, "name", Textbox.text)
-    if Flag and Flag[1].index ~= Dropdown.selected_index then
+    --- Valores a usar
+    local Name = Textbox.text == ""
+    local Channel = GMOD.get_tables(Data.channels, "name", Textbox.text)
+    Channel = Channel and Channel[1] or nil
+
+    --- Valores incorrecto
+    if Name or (Channel and Channel.index ~= Dropdown.selected_index) then
         This_MOD.sound_bad(Data)
         Textbox.focus()
+        return
+    end
+
+    --- No cambio de nombre
+    if Channel and Channel.index == Dropdown.selected_index then
+        Data.GUI.frame_new_channel.visible = false
+        Data.GUI.frame_old_channel.visible = true
+        This_MOD.sound_good(Data)
         return
     end
 
