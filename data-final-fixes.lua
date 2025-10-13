@@ -457,7 +457,6 @@ end
 --- [ Valores a usar en control.lua ] ---
 ---------------------------------------------------------------------------
 
---- Estilos a usar
 function This_MOD.load_styles()
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Valores a usar
@@ -551,7 +550,6 @@ function This_MOD.load_styles()
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
---- Icono para las imagenes
 function This_MOD.load_icon()
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Validación
@@ -583,7 +581,6 @@ function This_MOD.load_icon()
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 end
 
---- Cargar el sonido
 function This_MOD.load_sound()
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
