@@ -641,14 +641,14 @@ function This_MOD.edit_channel_name(Data)
     Channel = Channel and Channel[1] or nil
 
     --- Valores incorrecto
-    if Name or (Channel and Channel.index ~= Dropdown.selected_index) then
+    if Name or (Channel and Channel.index ~= Index) then
         This_MOD.sound_bad(Data)
         Textbox.focus()
         return
     end
 
     --- No cambio de nombre
-    if Channel and Channel.index == Dropdown.selected_index then
+    if Channel and Channel.index == Index then
         Data.GUI.frame_channel_edit.visible = false
         Data.GUI.frame_channel_list.visible = true
         This_MOD.sound_good(Data)
@@ -671,7 +671,7 @@ function This_MOD.edit_channel_name(Data)
     --- Actualizar la GUI
     Dropdown.remove_item(Index)
     Dropdown.add_item(Textbox.text, Index)
-    Data.GUI.dropdown_channels.selected_index = This_MOD.get_channel(Data).index
+    Dropdown.selected_index = This_MOD.get_channel(Data).index
 
     --- Enfocar la selección
     This_MOD.selection_channel(Data)
