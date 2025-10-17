@@ -156,7 +156,6 @@ function This_MOD.create_entity(Data)
 end
 
 function This_MOD.toggle_gui(Data)
-    GMOD.var_dump(storage)
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     local function validate_close()
