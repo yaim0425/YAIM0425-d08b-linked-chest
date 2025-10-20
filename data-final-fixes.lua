@@ -87,7 +87,7 @@ function This_MOD.reference_values()
 
     --- Valores de referencia
     This_MOD.old_entity_name = "linked-chest"
-    This_MOD.new_entity_name = This_MOD.prefix .. "linked-chest"
+    This_MOD.new_entity_name = This_MOD.prefix .. This_MOD.old_entity_name
 
     --- Rutas de los recursos
     This_MOD.path_graphics = "__" .. This_MOD.prefix .. This_MOD.name .. "__/graphics/"
