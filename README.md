@@ -42,12 +42,37 @@ No belts, trains, bots, or rockets are required.
 
 ## 🔗 Repository
 
-* GitHub: [https://github.com/yaim0425/YAIM0425-d08b-linked-chest](https://github.com/yaim0425/YAIM0425-d08b-linked-chest)
+**MOD**
+[YAIM0425 d08b Linked chest](https://github.com/yaim0425/YAIM0425-d08b-linked-chest)
+
+**Required**
+
+[YAIM0425 d00b Core](https://github.com/yaim0425/YAIM0425-d00b-core)
+
+---
+
+## ❤️ Support
+
+Suggestions, ideas, and balance feedback are welcome on the GitHub repository.
 
 ---
 
 ## 🖼️ Screenshots
 
-![Linked Chest Screenshot 1](screenshot/\(1\).png)
+![Screenshot 1](https://github.com/yaim0425/YAIM0425-d08b-linked-chest/raw/code/screenshot/(1).png)
 
----
+![Screenshot 2](https://github.com/yaim0425/YAIM0425-d08b-linked-chest/raw/code/screenshot/(2).png)
+
+![Screenshot 3](https://github.com/yaim0425/YAIM0425-d08b-linked-chest/raw/code/screenshot/(3).png)
+
+![Screenshot 4](https://github.com/yaim0425/YAIM0425-d08b-linked-chest/raw/code/screenshot/(4).png)
+
+![Screenshot 5](https://github.com/yaim0425/YAIM0425-d08b-linked-chest/raw/code/screenshot/(5).png)
+
+![Screenshot 6](https://github.com/yaim0425/YAIM0425-d08b-linked-chest/raw/code/screenshot/(6).png)
+
+![Screenshot 7](https://github.com/yaim0425/YAIM0425-d08b-linked-chest/raw/code/screenshot/(7).png)
+
+![Screenshot 8](https://github.com/yaim0425/YAIM0425-d08b-linked-chest/raw/code/screenshot/(8).png)
+
+![Screenshot 9](https://github.com/yaim0425/YAIM0425-d08b-linked-chest/raw/code/screenshot/(9).png)
