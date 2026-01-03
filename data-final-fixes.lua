@@ -287,7 +287,7 @@ function This_MOD.create_entity(space)
     Entity.next_upgrade = nil
 
     --- Copiar los iconos del cofre
-    Entity.icons = GMOD.copy(space.item.icons)
+    Entity.icons = GMOD.copy(space.chest_item.icons)
 
     --- Copiar la imagen del cofre
     Entity.picture = GMOD.copy(space.chest_entity.picture)
