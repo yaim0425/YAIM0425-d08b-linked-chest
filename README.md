@@ -1,5 +1,7 @@
 # YAIM904 d08b – Linked Chest 🔗📦
 
+---
+
 ## 📦 Description
 
 **YAIM904 d08b – Linked Chest** introduces special chests that allow items to be **sent and received instantly from anywhere to anywhere**.
