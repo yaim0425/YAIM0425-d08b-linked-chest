@@ -284,6 +284,7 @@ function This_MOD.create_entity(space)
 
     --- Elimnar propiedades inecesarias
     Entity.fast_replaceable_group = nil
+    Entity.surface_conditions = nil
     Entity.next_upgrade = nil
 
     --- Copiar los iconos del cofre
