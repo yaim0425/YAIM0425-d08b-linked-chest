@@ -494,6 +494,7 @@ function This_MOD.load_styles()
         parent = "dropdown",
         list_box_style = {
             type = "list_box_style",
+            maximal_height = 500,
             item_style = {
                 type = "button_style",
                 parent = "list_box_item",
