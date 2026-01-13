@@ -107,7 +107,7 @@ function This_MOD.load_events()
     script.on_event({
         defines.events.on_gui_confirmed
     }, function(event)
-        This_MOD.edit_channel_name(This_MOD.Create_data(event))
+        This_MOD.edit_channel_name(This_MOD.create_data(event))
     end)
 
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -616,6 +616,18 @@ function This_MOD.add_icon(Data)
 end
 
 function This_MOD.edit_channel_name(Data)
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    --- Validación
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+    if not Data.GUI.frame_main then return end
+
+    --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+
+
+
+
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     --- Renombrar
     --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
