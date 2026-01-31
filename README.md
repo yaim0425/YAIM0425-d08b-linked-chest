@@ -1,10 +1,12 @@
 # YAIM904 d08b – Linked Chest 🔗📦
 
+---
+
 ## 📦 Description
 
 **YAIM904 d08b – Linked Chest** introduces special chests that allow items to be **sent and received instantly from anywhere to anywhere**.
 
-Linked chests share the same inventory across **any distance**, **any surface**, and even **between planets**. If an item is inserted into one linked chest, it immediately becomes available in all other linked chests.
+Linked chests share the same inventory across **any distance**, **any surface** and even **between planets**. If an item is inserted into one linked chest, it immediately becomes available in all other linked chests.
 
 This MOD removes all physical distance limitations from item transport.
 
@@ -30,7 +32,7 @@ No belts, trains, bots, or rockets are required.
 ## ⚠️ Warnings
 
 * 🚨 **This MOD completely breaks logistics balance**
-* 📦 Removes the need for belts, trains, bots, and interplanetary transport
+* 📦 Removes the need for belts, trains, bots and interplanetary transport
 * 🧪 Recommended for:
 
   * Sandbox and creative gameplay
@@ -53,7 +55,7 @@ No belts, trains, bots, or rockets are required.
 
 ## ❤️ Support
 
-Suggestions, ideas, and balance feedback are welcome on the GitHub repository.
+Suggestions, ideas and balance feedback are welcome on the GitHub repository.
 
 ---
 

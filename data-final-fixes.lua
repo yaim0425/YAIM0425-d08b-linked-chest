@@ -284,10 +284,11 @@ function This_MOD.create_entity(space)
 
     --- Elimnar propiedades inecesarias
     Entity.fast_replaceable_group = nil
+    Entity.surface_conditions = nil
     Entity.next_upgrade = nil
 
     --- Copiar los iconos del cofre
-    Entity.icons = GMOD.copy(space.item.icons)
+    Entity.icons = GMOD.copy(space.chest_item.icons)
 
     --- Copiar la imagen del cofre
     Entity.picture = GMOD.copy(space.chest_entity.picture)
@@ -493,6 +494,7 @@ function This_MOD.load_styles()
         parent = "dropdown",
         list_box_style = {
             type = "list_box_style",
+            maximal_height = 500,
             item_style = {
                 type = "button_style",
                 parent = "list_box_item",
