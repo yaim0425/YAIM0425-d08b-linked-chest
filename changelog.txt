@@ -5,6 +5,7 @@ Date: 2026-01-31
     - Entity Icon Update
     - Allow construction in space
     - Set a default size for the name list
+    - Fix error when changing channel name with ENTER
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.1
 Date: 2025-12-31
